@@ -30,4 +30,4 @@ This repository starts with the unbranded Customer Management prototype as a rec
 
 ## Notes
 
-All data is anonymized and fictional. The prototypes are portfolio artifacts and do not contain production data, proprietary customer information or real internal system access.
+All prototype data is anonymized and fictional. The prototypes are portfolio artifacts and do not contain production data, proprietary customer information or real internal system access.
