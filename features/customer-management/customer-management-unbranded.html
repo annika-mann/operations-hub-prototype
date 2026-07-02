@@ -1,0 +1,1448 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Operations Hub – Customer Management – Unbranded Prototype</title>
+<style>
+:root{
+  --brand-primary:#2563EB;
+  --brand-accent:#2A918A;
+  --ink:#0F172A;
+  --muted:#64748B;
+  --line:#E2E8F0;
+  --bg:#FFFFFF;
+  --bg2:#F8FAFC;
+  --success:#16A34A;
+  --warning:#D97706;
+  --danger:#DC2626;
+  --shadow:0 10px 25px rgba(15,23,42,.06);
+  --radius:16px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+  --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg)}
+a{color:var(--brand-primary);text-decoration:none} a:hover{text-decoration:underline}
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+@media(max-width:980px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+.sidebar{border-right:1px solid var(--line);padding:18px 14px;background:linear-gradient(180deg,#fff,#fbfcff)}
+.brand{display:flex;align-items:center;gap:10px;padding:10px;border-radius:14px}
+.logo{width:40px;height:40px;border-radius:14px;background:rgba(37,99,235,.12);display:flex;align-items:center;justify-content:center;font-weight:1100;color:var(--brand-primary)}
+.nav{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.nav-title{margin:18px 10px 6px;font-size:11px;font-weight:1100;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.nav-main{padding:10px;border-radius:14px;font-weight:1100;color:var(--muted);display:flex;align-items:center;gap:10px;justify-content:flex-start}
+.nav-main.active{background:rgba(37,99,235,.10);color:var(--ink)}
+.nav-main:hover{background:rgba(37,99,235,.06);text-decoration:none}
+.nav-sub{margin:0 0 6px 14px;border-left:1px solid var(--line);padding-left:8px;display:flex;flex-direction:column;gap:4px}
+.nav-sub a{padding:8px 10px;font-size:13px;border-radius:12px;justify-content:flex-start;font-weight:1100;color:var(--muted)}
+.nav-sub a.active{background:rgba(37,99,235,.10);color:var(--ink)}
+.nav-sub a:hover{background:rgba(37,99,235,.06);text-decoration:none}
+.nav a{display:flex;align-items:center;gap:10px}
+.flow-note{margin-top:18px;padding:12px 10px;border:1px solid var(--line);border-radius:16px;background:#fff}
+.flow-note ul{margin:8px 0 0 18px;padding:0;color:var(--muted);font-size:12px;line-height:1.45}
+.main{padding:18px 22px}.toprow{display:flex;gap:14px;align-items:center;justify-content:flex-end;position:sticky;top:0;z-index:10;background:#fff;padding:14px 0 10px;border-bottom:1px solid var(--line)}
+.user{display:flex;gap:10px;align-items:center;color:var(--muted);font-weight:1100}.user-name{font-weight:400}.dot{width:10px;height:10px;border-radius:99px;background:var(--brand-primary);flex:0 0 auto}
+h1{margin:12px 0 2px;font-size:30px;letter-spacing:-.02em}.sub{color:var(--muted);font-size:13px;line-height:1.45}.muted{color:var(--muted)}.mono{font-family:var(--mono);font-size:12px}.divider{height:1px;background:var(--line);margin:14px 0}.hidden{display:none!important}
+.route{display:none}.route.active{display:block}
+.hero-split{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:stretch;margin-top:18px}@media(max-width:980px){.hero-split{grid-template-columns:1fr}}
+.hero-panel{border:1px solid var(--line);border-radius:24px;background:linear-gradient(135deg,#fff,#F8FAFC);box-shadow:var(--shadow);padding:28px 28px 32px}.hero-panel h1{font-size:36px;line-height:1.08;margin:8px 0 16px;max-width:820px}.hero-side{border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:var(--shadow);padding:20px;display:flex;flex-direction:column;justify-content:space-between;gap:16px}
+.mini-metric{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}.mini-metric:last-child{border-bottom:0}
+.label{display:block;font-size:12px;font-weight:1100;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}.inline-label{font-size:12px;font-weight:1100;color:var(--muted);white-space:nowrap}
+.card{border:1px solid var(--line);border-radius:var(--radius);background:#fff;box-shadow:var(--shadow);overflow:hidden;margin-top:18px}.cardhead{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(180deg,#fff,#fbfcff);flex-wrap:wrap}.cardhead h2{margin:0;font-size:16px}.cardbody{padding:14px 16px}.box{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fff}.box h4{margin:0 0 10px;font-size:14px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}@media(max-width:980px){.grid3{grid-template-columns:1fr}}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.feature-card{min-height:190px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;transition:.15s transform,.15s border-color}.feature-card:hover{transform:translateY(-2px);border-color:rgba(37,99,235,.35)}.feature-icon{width:44px;height:44px;border-radius:16px;background:rgba(37,99,235,.10);color:var(--brand-primary);display:flex;align-items:center;justify-content:center;font-weight:1100;margin-bottom:14px}.feature-card .card{margin-top:0}.feature-card h2{margin:0 0 8px;font-size:18px}
+.btn{border-radius:999px;border:2px solid var(--line);background:#fff;padding:10px 14px;font-weight:1100;font-size:14px;cursor:pointer;display:inline-flex;gap:10px;align-items:center;transition:.15s transform,.15s opacity,.15s border-color,color .15s;color:#111827;font-family:var(--sans)}.btn:hover{transform:translateY(-1px);border-color:#d7dbe5}.btn:active{transform:translateY(0)}.btn.primary{border-color:var(--brand-primary);color:var(--brand-primary);background:#fff}.btn.primary:hover{background:rgba(37,99,235,.06)}.btn.neutral{border-color:#111827;color:#111827;background:#fff}.btn.neutral:hover{background:rgba(17,24,39,.04)}.btn.small{padding:8px 12px;font-size:13px}.btn.text{border:none;background:transparent;padding:0;font-size:13px;color:#111827;border-radius:0;gap:0}.btn.text:hover{transform:none;border-color:transparent;background:transparent;text-decoration:underline}.btn[disabled]{opacity:.55;cursor:not-allowed;transform:none}
+.hint{padding:12px;border-radius:14px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.18);font-size:13px;line-height:1.45;color:#1E3A8A}.dev-note{padding:12px;border-radius:14px;background:#F4F7F9;border:1px solid #CBD5DC;border-left:4px solid #4B5B69;color:#3F4E5A;font-size:13px;line-height:1.45}.dev-note strong{color:#2F3A44}.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.18);font-size:12px;font-weight:1100;white-space:nowrap;color:#1E3A8A}.pill.ok{background:rgba(22,163,74,.10);border-color:rgba(22,163,74,.22);color:#166534}.pill.warn{background:rgba(217,119,6,.10);border-color:rgba(217,119,6,.22);color:#92400E}.pill.neutral{background:#F8FAFC;border-color:var(--line);color:var(--muted)}.pill.readonly{background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.18);color:#1E3A8A}
+.entry-shell{max-width:760px}.entry-form{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-top:12px}.entry-form input,.filters input,.filters select,.field input,.field select{border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:14px;outline:none;background:#fff;min-width:280px;font-family:var(--sans);color:var(--ink)}.entry-form input:focus,.filters input:focus,.filters select:focus{border-color:var(--brand-primary);box-shadow:0 0 0 3px rgba(37,99,235,.14)}
+.selected-customer{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.header-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.tabs{display:flex;gap:0;align-items:flex-end;flex-wrap:nowrap;margin-top:16px;border-bottom:1px solid var(--line);overflow:auto}.tab{padding:12px 18px;font-weight:1100;color:#111827;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;user-select:none}.tab.active{border-bottom-color:var(--brand-primary);color:var(--brand-primary)}.tab+.tab{margin-left:26px}.tabpane{display:none;padding-top:14px}.tabpane.show{display:block}
+.review-table{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}.review-row{display:grid;grid-template-columns:220px 1fr;gap:14px;align-items:center;padding:13px 16px;border-bottom:1px solid var(--line)}.review-row:nth-child(even){background:var(--bg2)}.review-row:last-child{border-bottom:0}.review-label{color:var(--muted);font-weight:650;font-size:13px}.review-value{color:var(--ink);font-weight:500}@media(max-width:780px){.review-row{grid-template-columns:1fr}}
+.filters{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;justify-content:space-between;margin:12px 0}.qf-wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.qf-label{font-size:12px;font-weight:1100;color:var(--muted)}.qf{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff}.qf button{border:none;background:transparent;cursor:pointer;padding:10px 14px;font-weight:1100;color:#6b7280;font-size:14px;font-family:var(--sans)}.qf button.active{background:rgba(37,99,235,.10);color:var(--brand-primary)}
+table{width:100%;border-collapse:collapse;font-size:14px;font-family:var(--sans)}th,td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}th{color:var(--brand-primary);font-size:13px;font-weight:1100;white-space:nowrap}tr:hover td{background:rgba(37,99,235,.03)}.table-wrap{overflow:auto}.status{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:800;background:#F8FAFC;border:1px solid var(--line);color:var(--muted)}.status.open{background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.18);color:#1E3A8A}.status.ok{background:rgba(22,163,74,.10);border-color:rgba(22,163,74,.20);color:#166534}.status.wait{background:rgba(217,119,6,.10);border-color:rgba(217,119,6,.20);color:#92400E}.status.danger{background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.18);color:#991B1B}
+.ticket-layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:16px;align-items:start}@media(max-width:980px){.ticket-layout{grid-template-columns:1fr}}.side-panel{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fff}.sidebtn{display:flex;align-items:center;gap:.5rem;width:100%;text-align:left;border:1px solid var(--line);border-radius:12px;padding:.55rem .75rem;background:#fff;cursor:pointer;font-weight:800}.sidebtn+ .sidebtn{margin-top:8px}.sidebtn:hover{background:rgba(37,99,235,.04)}.sla-row{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:8px 0;font-size:13px}.sla-row:last-child{border-bottom:0}.preview-box{border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff;margin-top:16px}.toast{position:fixed;bottom:18px;left:18px;right:18px;display:none;justify-content:center;z-index:500}.toast>div{background:#111827;color:#fff;padding:12px 14px;border-radius:999px;box-shadow:0 18px 40px rgba(16,24,40,.25);font-weight:1100;font-size:13px;max-width:960px;text-align:center}
+
+/* v7 dark mode tokens + component overrides */
+:root{
+  color-scheme:light;
+  --surface:#FFFFFF;
+  --surface-soft:#F8FAFC;
+  --line-strong:#CBD5E1;
+}
+
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --brand-primary:#6EA8FF;
+  --brand-accent:#67D7CE;
+  --ink:#E5EEF7;
+  --muted:#9FB0C0;
+  --line:#273344;
+  --line-strong:#38475A;
+  --bg:#0D1219;
+  --bg2:#111A24;
+  --surface:#151F2B;
+  --surface-soft:#192635;
+  --success:#4ADE80;
+  --warning:#FBBF24;
+  --danger:#F87171;
+  --shadow:0 12px 32px rgba(0,0,0,.30);
+}
+
+html[data-theme="dark"] body{
+  background:var(--bg);
+  color:var(--ink);
+}
+
+html[data-theme="dark"] .sidebar{
+  background:linear-gradient(180deg,#111A24,#0D1219);
+  border-right-color:var(--line);
+}
+
+html[data-theme="dark"] .toprow{
+  background:var(--bg);
+  border-bottom-color:var(--line);
+}
+
+html[data-theme="dark"] .brand,
+html[data-theme="dark"] .logo{
+  color:var(--brand-primary);
+}
+
+html[data-theme="dark"] .logo,
+html[data-theme="dark"] .feature-icon{
+  background:rgba(110,168,255,.14);
+}
+
+html[data-theme="dark"] .nav-main,
+html[data-theme="dark"] .nav-sub a{
+  color:var(--muted);
+}
+
+html[data-theme="dark"] .nav-main.active,
+html[data-theme="dark"] .nav-sub a.active{
+  background:rgba(110,168,255,.16);
+  color:var(--ink);
+}
+
+html[data-theme="dark"] .nav-main:hover,
+html[data-theme="dark"] .nav-sub a:hover{
+  background:rgba(110,168,255,.10);
+}
+
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .box,
+html[data-theme="dark"] .hero-side,
+html[data-theme="dark"] .flow-note,
+html[data-theme="dark"] .side-panel,
+html[data-theme="dark"] .preview-box,
+html[data-theme="dark"] .metric,
+html[data-theme="dark"] .entry-card{
+  background:var(--surface);
+  border-color:var(--line);
+  box-shadow:var(--shadow);
+}
+
+html[data-theme="dark"] .hero-panel,
+html[data-theme="dark"] .cardhead{
+  background:linear-gradient(180deg,var(--surface),var(--surface-soft));
+  border-color:var(--line);
+}
+
+html[data-theme="dark"] .hero-panel{
+  background:linear-gradient(135deg,var(--surface),var(--surface-soft));
+}
+
+html[data-theme="dark"] .divider,
+html[data-theme="dark"] .mini-metric,
+html[data-theme="dark"] th,
+html[data-theme="dark"] td{
+  border-color:var(--line);
+}
+
+html[data-theme="dark"] tr:hover td{
+  background:rgba(110,168,255,.06);
+}
+
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea{
+  background:var(--surface-soft);
+  color:var(--ink);
+  border-color:var(--line-strong);
+}
+
+html[data-theme="dark"] input::placeholder{
+  color:#7F90A3;
+}
+
+html[data-theme="dark"] input:focus,
+html[data-theme="dark"] select:focus,
+html[data-theme="dark"] textarea:focus{
+  border-color:var(--brand-primary);
+  box-shadow:0 0 0 3px rgba(110,168,255,.18);
+}
+
+html[data-theme="dark"] .btn{
+  background:var(--surface);
+  border-color:var(--line-strong);
+  color:var(--ink);
+}
+
+html[data-theme="dark"] .btn:hover{
+  background:rgba(110,168,255,.08);
+  border-color:rgba(110,168,255,.34);
+}
+
+html[data-theme="dark"] .btn.primary{
+  border-color:var(--brand-primary);
+  color:var(--brand-primary);
+}
+
+html[data-theme="dark"] .btn.neutral{
+  border-color:#D9E2EC;
+  color:#F8FAFC;
+  background:transparent;
+}
+
+html[data-theme="dark"] .btn.text{
+  background:transparent;
+  border-color:transparent;
+  color:#F8FAFC;
+}
+
+html[data-theme="dark"] .hint{
+  background:rgba(110,168,255,.12);
+  border-color:rgba(110,168,255,.24);
+  color:#BFD7FF;
+}
+
+html[data-theme="dark"] .dev-note{
+  background:#1B2633;
+  border-color:#3A4A5F;
+  border-left-color:#7F90A3;
+  color:#C5D1DE;
+}
+
+html[data-theme="dark"] .dev-note strong{
+  color:#E5EEF7;
+}
+
+html[data-theme="dark"] .pill{
+  background:rgba(110,168,255,.14);
+  border-color:rgba(110,168,255,.26);
+  color:#BFD7FF;
+}
+
+html[data-theme="dark"] .pill.neutral,
+html[data-theme="dark"] .pill.readonly{
+  background:rgba(110,168,255,.12);
+  border-color:rgba(110,168,255,.24);
+  color:#BFD7FF;
+}
+
+html[data-theme="dark"] .pill.ok,
+html[data-theme="dark"] .status.ok{
+  background:rgba(74,222,128,.13);
+  border-color:rgba(74,222,128,.28);
+  color:#A7F3D0;
+}
+
+html[data-theme="dark"] .pill.warn,
+html[data-theme="dark"] .status.wait{
+  background:rgba(251,191,36,.12);
+  border-color:rgba(251,191,36,.28);
+  color:#FDE68A;
+}
+
+html[data-theme="dark"] .status.open{
+  background:rgba(110,168,255,.13);
+  border-color:rgba(110,168,255,.28);
+  color:#BFD7FF;
+}
+
+html[data-theme="dark"] .status.danger{
+  background:rgba(248,113,113,.12);
+  border-color:rgba(248,113,113,.28);
+  color:#FECACA;
+}
+
+html[data-theme="dark"] .qf,
+html[data-theme="dark"] .qf button,
+html[data-theme="dark"] .sidebtn{
+  background:var(--surface);
+  border-color:var(--line);
+  color:var(--muted);
+}
+
+html[data-theme="dark"] .qf button.active,
+html[data-theme="dark"] .sidebtn:hover{
+  background:rgba(110,168,255,.14);
+  color:var(--ink);
+}
+
+html[data-theme="dark"] .review-table,
+html[data-theme="dark"] .review-row,
+html[data-theme="dark"] .table-wrap{
+  background:var(--surface);
+  border-color:var(--line);
+}
+
+html[data-theme="dark"] .review-row:nth-child(even){
+  background:var(--surface-soft);
+}
+
+html[data-theme="dark"] .review-value{
+  color:var(--ink);
+}
+
+html[data-theme="dark"] .toast>div{
+  background:#E5EEF7;
+  color:#0D1219;
+}
+
+.theme-toggle{
+  margin-right:auto;
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:var(--muted);
+  border-radius:999px;
+  padding:6px 10px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font:inherit;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.theme-toggle:hover{
+  border-color:rgba(37,99,235,.25);
+}
+
+.theme-toggle-track{
+  width:34px;
+  height:20px;
+  border-radius:999px;
+  background:rgba(37,99,235,.10);
+  border:1px solid rgba(37,99,235,.18);
+  position:relative;
+  display:inline-block;
+}
+
+.theme-toggle-knob{
+  position:absolute;
+  width:14px;
+  height:14px;
+  top:2px;
+  left:2px;
+  border-radius:50%;
+  background:var(--brand-primary);
+  transition:transform .18s ease;
+}
+
+html[data-theme="dark"] .theme-toggle{
+  background:var(--surface);
+  border-color:var(--line);
+  color:var(--muted);
+}
+
+html[data-theme="dark"] .theme-toggle-track{
+  background:rgba(110,168,255,.16);
+  border-color:rgba(110,168,255,.28);
+}
+
+html[data-theme="dark"] .theme-toggle-knob{
+  transform:translateX(14px);
+  background:var(--brand-primary);
+}
+
+
+/* v8 basic responsive / compressed desktop support */
+html, body{
+  overflow-x:hidden;
+}
+
+.main,
+.card,
+.hero-panel,
+.hero-side,
+.box,
+.table-wrap,
+.preview-box{
+  min-width:0;
+}
+
+.table-wrap{
+  width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+
+table{
+  min-width:720px;
+}
+
+#route-profile table,
+#route-contacts table,
+#route-users table{
+  min-width:760px;
+}
+
+#route-tickets table,
+#route-offers table,
+#route-orders table,
+#route-contracts table,
+#route-invoices table{
+  min-width:820px;
+}
+
+@media(max-width:1280px){
+  .grid3{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .hero-split{
+    grid-template-columns:minmax(0,1fr) 320px;
+  }
+}
+
+@media(max-width:1120px){
+  .layout{
+    grid-template-columns:230px minmax(0,1fr);
+  }
+
+  .sidebar{
+    padding:14px 10px;
+  }
+
+  .main{
+    padding:14px 16px;
+  }
+
+  .hero-split{
+    grid-template-columns:1fr;
+  }
+
+  .ticket-layout{
+    grid-template-columns:1fr;
+  }
+
+  .feature-card{
+    min-height:170px;
+  }
+
+  .hero-panel h1{
+    font-size:32px;
+  }
+
+  .entry-form,
+  .filters{
+    align-items:flex-start;
+  }
+}
+
+@media(max-width:980px){
+  .layout{
+    grid-template-columns:220px minmax(0,1fr);
+  }
+
+  .sidebar{
+    display:block;
+  }
+
+  .brand{
+    gap:8px;
+  }
+
+  .brand .muted{
+    display:none;
+  }
+
+  .logo{
+    width:36px;
+    height:36px;
+    border-radius:12px;
+  }
+
+  .nav-title{
+    font-size:10px;
+    margin:14px 10px 5px;
+  }
+
+  .nav-main{
+    padding:9px 10px;
+    font-size:13px;
+  }
+
+  .nav-sub{
+    margin-left:12px;
+    padding-left:7px;
+  }
+
+  .nav-sub a{
+    padding:7px 9px;
+    font-size:12px;
+  }
+
+  .flow-note{
+    padding:10px;
+  }
+
+  .flow-note ul,
+  .flow-note .sub{
+    font-size:11px !important;
+  }
+
+  .toprow{
+    gap:10px;
+    padding:10px 0 8px;
+  }
+
+  .theme-toggle{
+    padding:5px 8px;
+  }
+
+  .user{
+    gap:8px;
+    font-size:13px;
+  }
+
+  .pill{
+    padding:5px 8px;
+    font-size:11px;
+  }
+
+  .hero-panel,
+  .hero-side{
+    border-radius:20px;
+    padding:18px;
+  }
+
+  .hero-panel h1{
+    font-size:28px;
+  }
+
+  .cardhead,
+  .cardbody{
+    padding:12px;
+  }
+
+  .feature-card{
+    min-height:150px;
+  }
+}
+
+@media(max-width:820px){
+  .layout{
+    grid-template-columns:190px minmax(0,1fr);
+  }
+
+  .sidebar{
+    padding:12px 8px;
+  }
+
+  .brand{
+    padding:8px;
+  }
+
+  .brand > div:last-child > div:first-child{
+    font-size:13px;
+  }
+
+  .nav a{
+    gap:6px;
+  }
+
+  .nav-sub a{
+    font-size:11.5px;
+  }
+
+  .main{
+    padding:12px;
+  }
+
+  .toprow{
+    flex-wrap:wrap;
+  }
+
+  .theme-toggle{
+    order:2;
+  }
+
+  .user{
+    margin-left:auto;
+  }
+
+  .grid3,
+  .grid2{
+    grid-template-columns:1fr;
+  }
+
+  .entry-form{
+    display:grid;
+    grid-template-columns:1fr;
+  }
+
+  .entry-form input,
+  .filters input,
+  .filters select,
+  .field input,
+  .field select{
+    min-width:0;
+    width:100%;
+  }
+
+  .entry-form label,
+  .filters label{
+    width:100%;
+  }
+
+  .entry-form .btn{
+    width:fit-content;
+  }
+
+  .tabs{
+    gap:14px;
+  }
+
+  .tab{
+    padding:10px 8px;
+    font-size:13px;
+  }
+
+  .tab + .tab{
+    margin-left:8px;
+  }
+
+  .review-row{
+    grid-template-columns:1fr;
+    gap:6px;
+  }
+}
+
+@media(max-width:680px){
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .sidebar{
+    display:block;
+    position:relative;
+    border-right:none;
+    border-bottom:1px solid var(--line);
+  }
+
+  .brand{
+    justify-content:space-between;
+  }
+
+  .nav-sub{
+    border-left:none;
+    margin-left:0;
+    padding-left:0;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:6px;
+  }
+
+  .nav-sub a{
+    justify-content:center;
+    text-align:center;
+    border:1px solid var(--line);
+    background:var(--surface, #fff);
+  }
+
+  html[data-theme="dark"] .nav-sub a{
+    background:var(--surface);
+    border-color:var(--line);
+  }
+
+  .flow-note{
+    display:none;
+  }
+
+  .main{
+    padding:10px;
+  }
+
+  .toprow{
+    position:relative;
+    justify-content:space-between;
+  }
+
+  .theme-toggle{
+    order:0;
+    margin-right:0;
+  }
+
+  .user{
+    margin-left:0;
+  }
+
+  .hero-panel h1{
+    font-size:24px;
+  }
+
+  h1{
+    font-size:24px;
+  }
+
+  .card,
+  .hero-panel,
+  .hero-side,
+  .box{
+    border-radius:14px;
+  }
+
+  table{
+    min-width:680px;
+  }
+}
+
+@media(max-width:460px){
+  .nav-sub{
+    grid-template-columns:1fr;
+  }
+
+  .user-name{
+    display:none;
+  }
+
+  .theme-toggle #themeLabel{
+    display:none;
+  }
+
+  .hero-panel,
+  .hero-side,
+  .cardbody,
+  .cardhead{
+    padding:10px;
+  }
+
+  .feature-card{
+    min-height:auto;
+  }
+
+  .btn{
+    padding:8px 11px;
+    font-size:13px;
+  }
+}
+
+
+/* v9 final unbranded scope refinements */
+.adjacent-area-note{margin-top:14px;padding:10px;border:1px dashed rgba(37,99,235,.26);border-radius:14px;background:rgba(37,99,235,.04);font-size:12px;color:var(--muted);line-height:1.45}
+.adjacent-nav{margin-top:16px;border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:8px}
+.adjacent-nav .nav-title{margin:0 10px 2px}
+.adjacent-link{padding:8px 10px;border-radius:12px;color:#94A3B8;font-weight:900;font-size:13px;display:flex;justify-content:space-between;align-items:center;cursor:not-allowed}
+.adjacent-link span:last-child{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#94A3B8}
+.detail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+@media(max-width:1120px){.detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.detail-grid{grid-template-columns:1fr}}
+.detail-card{border:1px solid var(--line);border-radius:16px;background:#fff;padding:14px;min-width:0}
+.detail-card h3{margin:0 0 10px;font-size:15px}
+.detail-list{display:grid;gap:9px}
+.detail-row{display:grid;grid-template-columns:120px minmax(0,1fr);gap:10px;font-size:13px;align-items:start}
+.detail-row span:first-child{color:var(--muted);font-weight:800}
+.access-table .masked{letter-spacing:.12em;font-family:var(--mono);font-size:12px}
+.file-actions{display:flex;gap:8px;flex-wrap:wrap}
+.legend-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+html[data-theme="dark"] .detail-card{background:var(--surface);border-color:var(--line)}
+html[data-theme="dark"] .adjacent-area-note{background:rgba(110,168,255,.08);border-color:rgba(110,168,255,.22);color:var(--muted)}
+html[data-theme="dark"] .adjacent-nav{border-top-color:var(--line)}
+html[data-theme="dark"] .adjacent-link{color:#6F8196}
+html[data-theme="dark"] .adjacent-link span:last-child{color:#6F8196}
+@media(max-width:680px){.adjacent-nav{display:none}.detail-row{grid-template-columns:1fr;gap:3px}}
+
+
+/* v10 responsive & action polish */
+.icon-sprite{position:absolute;width:0;height:0;overflow:hidden}.icon{width:18px;height:18px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;flex:0 0 auto}.icon-sm{width:16px;height:16px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;line-height:1.2}.btn .icon{width:16px;height:16px}.btn.small{min-height:34px}.entry-form,.filters,.filter-toolbar{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}.filters{justify-content:space-between}.filters>label{margin-left:auto}.filters input,.filters select,.entry-form input,.entry-form select{max-width:100%;min-width:220px}.qf-wrap{min-width:0}.qf{display:inline-flex;align-items:center;flex-wrap:wrap}.table-wrap{width:100%;max-width:100%;overflow-x:auto!important;overflow-y:hidden;border-radius:16px;scrollbar-width:auto;scrollbar-color:#8A95A3 #EEF2F7}.table-wrap::-webkit-scrollbar{height:12px}.table-wrap::-webkit-scrollbar-track{background:#EEF2F7;border-radius:999px}.table-wrap::-webkit-scrollbar-thumb{background:#8A95A3;border-radius:999px;border:3px solid #EEF2F7}.table-wrap table{min-width:820px}.table-wrap th,.table-wrap td{vertical-align:top}#route-users .table-wrap table,#route-tickets .table-wrap table,#route-orders .table-wrap table,#route-contracts .table-wrap table,#route-invoices .table-wrap table{min-width:920px}#route-offers .table-wrap table{min-width:960px}.action-icons,.file-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;white-space:nowrap}.action-icons{justify-content:flex-end}.icon-action{width:34px;height:34px;border:1px solid var(--line);border-radius:12px;background:var(--surface,#fff);color:var(--muted);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:background .16s ease,border-color .16s ease,color .16s ease,transform .16s ease}.icon-action:hover,.icon-action:focus-visible{background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.24);color:var(--brand-primary);outline:none}.icon-action:active{transform:translateY(1px)}.status,.pill.status,td .status{display:inline-flex;align-items:center;justify-content:center;min-height:24px;padding:4px 10px;border-radius:999px;border:1px solid transparent;font-size:12px;line-height:1;font-weight:900;white-space:nowrap;text-transform:none;background:#F8FAFC;color:var(--muted)}.status.ok,.status.success,.status.paid,.status.completed,.status.active,.pill.ok{background:rgba(22,163,74,.12);border-color:rgba(22,163,74,.22);color:#15803D}.status.open,.status.info{background:rgba(37,99,235,.10);border-color:rgba(37,99,235,.22);color:#1D4ED8}.status.wait,.status.warning,.status.pending,.status.progress{background:rgba(217,119,6,.12);border-color:rgba(217,119,6,.24);color:#9A3412}.status.danger,.status.overdue,.status.failed{background:rgba(220,38,38,.10);border-color:rgba(220,38,38,.24);color:#B91C1C}.status.neutral,.status.cancelled,.status.closed{background:#F1F5F9;border-color:#E2E8F0;color:#475569}.sidebtn{display:flex!important;align-items:center;gap:10px;text-align:left}.ticket-category-icon{width:28px;height:28px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;color:var(--brand-primary);background:rgba(37,99,235,.08);flex:0 0 auto}.access-heading{display:flex;align-items:center;gap:8px}html[data-theme="dark"] .icon-action{background:var(--surface);border-color:var(--line)}html[data-theme="dark"] .icon-action:hover{background:rgba(110,168,255,.14);color:var(--brand-primary)}html[data-theme="dark"] .table-wrap{scrollbar-color:#5C6B7D #192635}html[data-theme="dark"] .table-wrap::-webkit-scrollbar-track{background:#192635}html[data-theme="dark"] .table-wrap::-webkit-scrollbar-thumb{background:#5C6B7D;border-color:#192635}html[data-theme="dark"] .status.ok,html[data-theme="dark"] .status.success,html[data-theme="dark"] .status.paid,html[data-theme="dark"] .status.completed,html[data-theme="dark"] .status.active,html[data-theme="dark"] .pill.ok{background:rgba(74,222,128,.13);border-color:rgba(74,222,128,.28);color:#A7F3D0}html[data-theme="dark"] .status.open,html[data-theme="dark"] .status.info{background:rgba(110,168,255,.13);border-color:rgba(110,168,255,.28);color:#BFD7FF}html[data-theme="dark"] .status.wait,html[data-theme="dark"] .status.warning,html[data-theme="dark"] .status.pending,html[data-theme="dark"] .status.progress{background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.28);color:#FDE68A}html[data-theme="dark"] .status.danger,html[data-theme="dark"] .status.overdue,html[data-theme="dark"] .status.failed{background:rgba(248,113,113,.12);border-color:rgba(248,113,113,.28);color:#FECACA}html[data-theme="dark"] .status.neutral,html[data-theme="dark"] .status.cancelled,html[data-theme="dark"] .status.closed{background:#1F2C3A;border-color:#334155;color:#CBD5E1}@media(max-width:1120px){.filters{align-items:flex-start;justify-content:flex-start}.filters>label{margin-left:0}.filters input,.filters select,.entry-form input,.entry-form select{flex:1 1 220px}.action-icons{justify-content:flex-start}}@media(max-width:820px){.entry-form,.filters{display:grid;grid-template-columns:1fr;width:100%;align-items:start}.entry-form .btn,.filters .btn{width:fit-content}.filters>label{width:100%}.filters input,.filters select,.entry-form input,.entry-form select{width:100%;min-width:0}.qf{border-radius:16px;overflow:hidden}.qf button{flex:1 1 auto}.btn{white-space:normal}.icon-action{width:32px;height:32px}}
+
+
+/* v11 typography, responsive table and icon clarity polish */
+body{font-weight:400;line-height:1.45;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2,h3,h4{font-weight:700;letter-spacing:-.015em;color:var(--ink)}
+.brand strong,.nav-main,.nav-sub a,.label,.inline-label,.qf-label,th,.tab,.btn,.sidebtn{font-weight:700}
+.nav-title{font-weight:650;letter-spacing:.10em}
+.sub,.muted,.review-label{font-weight:400}
+.review-label{font-size:13px;color:var(--muted)}
+.review-value{font-weight:400;color:var(--ink)}
+.review-value strong,td strong{font-weight:650}
+table{font-size:13.5px;line-height:1.35}
+th{font-size:12.5px;letter-spacing:0;color:var(--brand-primary)}
+td{font-weight:400;color:var(--ink)}
+.btn{font-size:13px;font-weight:700;padding:9px 13px}
+.btn.small{font-size:12.5px;padding:8px 12px}
+.pill{font-weight:600;font-size:12px}
+.status,.pill.status,td .status{font-weight:700;font-size:11.5px;letter-spacing:.01em;text-transform:none}
+.sidebtn{font-size:13.5px;line-height:1.2;min-height:42px}
+.ticket-category-icon{width:30px;height:30px;border-radius:11px}.ticket-category-icon .icon{width:17px;height:17px}
+.icon-action{width:34px;height:34px}.icon-action .icon{width:19px;height:19px}
+.icon-action[title*="customer portal" i],.icon-action[aria-label*="customer portal" i]{color:#2563EB}
+/* Make horizontal table scrolling reliable inside compressed grid layouts */
+.card,.cardbody,.ticket-layout,.ticket-layout main,.ticket-layout aside,.table-wrap{min-width:0}
+.ticket-layout main{overflow:hidden}
+.table-wrap{display:block;overflow-x:scroll!important;overflow-y:hidden;max-width:100%;padding-bottom:2px}
+#route-tickets .table-wrap table{min-width:1040px}
+#route-users .table-wrap table{min-width:980px}
+#route-orders .table-wrap table{min-width:1040px}
+#route-offers .table-wrap table{min-width:1000px}
+#route-contracts .table-wrap table,#route-invoices .table-wrap table{min-width:980px}
+.preview-box{margin-top:12px}
+.filters{align-items:flex-end;gap:12px}
+.filters>label{display:block}.filters input{width:100%}
+@media(max-width:1120px){
+  .filters{display:grid;grid-template-columns:minmax(0,1fr);align-items:start;justify-content:stretch}
+  .filters>label{margin-left:0;width:100%}
+  .qf-wrap{width:100%}
+  .qf{max-width:100%}
+  .entry-form{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end}
+  .entry-form label{min-width:0}.entry-form input{width:100%;min-width:0}
+  .entry-form .btn{align-self:end}
+}
+@media(max-width:760px){
+  .entry-form{grid-template-columns:1fr}
+  .entry-form .btn{width:fit-content}
+}
+html[data-theme="dark"] .icon-action[title*="customer portal" i],html[data-theme="dark"] .icon-action[aria-label*="customer portal" i]{color:#9CC4FF}
+
+
+/* v12 final polish: naming, badges, ticket hints, detail pages */
+.brand{padding:10px 10px 22px}
+.nav{margin-top:0}
+.logo{text-transform:lowercase}
+.status,.pill.status,td .status{
+  min-height:24px;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  line-height:1;
+  font-weight:700;
+  letter-spacing:0;
+  text-transform:none;
+}
+.main-contact-badge{
+  display:inline-flex;
+  align-items:center;
+  margin-left:8px;
+  padding:4px 9px;
+  border:1px solid rgba(37,99,235,.18);
+  border-radius:999px;
+  background:rgba(37,99,235,.08);
+  color:#1E3A8A;
+  font-size:11.5px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.contact-name-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.ticket-system-note{
+  margin-top:10px;
+  padding:10px 12px;
+  border:1px solid rgba(37,99,235,.18);
+  border-radius:14px;
+  background:rgba(37,99,235,.06);
+  color:#1E3A8A;
+  font-size:12px;
+  line-height:1.45;
+}
+.ticket-layout main{min-width:0;overflow:hidden}.ticket-layout .table-wrap{min-width:0;display:block;overflow-x:auto!important}.ticket-layout table{min-width:980px!important}
+.detail-page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:12px}.detail-page-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.detail-page-title h1{margin:0}.detail-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.contents-list{display:grid;gap:8px}.content-item{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--surface,#fff)}.content-item strong{font-weight:700}.content-meta{color:var(--muted);font-size:12px}.content-price{font-weight:700;white-space:nowrap}.content-status{justify-self:end}
+.file-action-group{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.file-action-group .icon-action{width:34px;height:34px}
+html[data-theme="dark"] .main-contact-badge{background:rgba(110,168,255,.12);border-color:rgba(110,168,255,.24);color:#BFD7FF}
+html[data-theme="dark"] .ticket-system-note{background:rgba(110,168,255,.10);border-color:rgba(110,168,255,.22);color:#BFD7FF}
+html[data-theme="dark"] .content-item{background:var(--surface);border-color:var(--line)}
+@media(max-width:760px){.content-item{grid-template-columns:1fr}.content-status{justify-self:start}.detail-toolbar{width:100%}}
+
+
+/* v13 contract contents + read-only credential cards */
+.contents-table-wrap{
+  overflow-x:auto;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:var(--surface,#fff);
+}
+.contents-table{
+  width:100%;
+  min-width:980px;
+  border-collapse:collapse;
+}
+.contents-table th{
+  background:rgba(37,99,235,.07);
+  color:#334155;
+  font-size:13px;
+  font-weight:800;
+  text-align:left;
+  padding:12px 14px;
+  border-bottom:1px solid var(--line);
+}
+.contents-table td{
+  padding:12px 14px;
+  border-bottom:1px solid var(--line);
+  vertical-align:top;
+  font-size:13px;
+}
+.contents-table tr:last-child td{border-bottom:0}
+.contents-name{font-weight:500;line-height:1.35}
+.credentials-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  margin:0 0 14px;
+}
+.visibility-filters{display:flex;gap:0;align-items:center;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface,#fff)}
+.visibility-filters span{padding:8px 14px;font-size:13px;color:var(--muted);border-right:1px solid var(--line)}
+.visibility-filters span:last-child{border-right:0}
+.visibility-filters .active{background:rgba(37,99,235,.08);color:var(--brand-primary);font-weight:800}
+.credential-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch}
+.credential-card{
+  position:relative;
+  border:1px solid rgba(22,163,74,.35);
+  border-radius:16px;
+  background:rgba(22,163,74,.06);
+  padding:16px;
+}
+.credential-card.internal{
+  border-color:rgba(37,99,235,.30);
+  background:rgba(37,99,235,.07);
+}
+.credential-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(15,23,42,.08);padding-bottom:10px;margin-bottom:12px}
+.credential-title{font-size:18px;font-weight:850;color:var(--ink);line-height:1.2}
+.visibility-badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:850;white-space:nowrap;background:rgba(22,163,74,.16);color:#15803D}
+.credential-card.internal .visibility-badge{background:rgba(37,99,235,.13);color:#1E3A8A;border:1px solid rgba(37,99,235,.22)}
+.credential-row{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;align-items:center;margin:10px 0;font-size:13px}
+.credential-row .label-inline{color:var(--muted);font-weight:700}
+.credential-value{display:flex;align-items:center;gap:8px;min-width:0}
+.credential-value a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.secret-chip{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface,#fff);padding:8px 10px;min-width:170px}
+.secret-dots{letter-spacing:3px;font-weight:800;color:var(--ink)}
+.inline-icon-btn{border:0;background:transparent;color:var(--muted);padding:2px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border-radius:7px}
+.inline-icon-btn:hover{background:rgba(37,99,235,.08);color:var(--brand-primary)}
+.readonly-note{margin-top:12px;font-size:12.5px;color:var(--muted);line-height:1.5}
+html[data-theme="dark"] .contents-table-wrap,
+html[data-theme="dark"] .contents-table th,
+html[data-theme="dark"] .contents-table td,
+html[data-theme="dark"] .visibility-filters,
+html[data-theme="dark"] .visibility-filters span{border-color:var(--line)}
+html[data-theme="dark"] .contents-table th{background:rgba(110,168,255,.12);color:var(--ink)}
+html[data-theme="dark"] .credential-card{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.30)}
+html[data-theme="dark"] .credential-card.internal{background:rgba(110,168,255,.09);border-color:rgba(110,168,255,.30)}
+html[data-theme="dark"] .credential-card-header{border-bottom-color:var(--line)}
+html[data-theme="dark"] .secret-chip{background:var(--surface-soft);border-color:var(--line-strong)}
+html[data-theme="dark"] .visibility-badge{background:rgba(74,222,128,.13);color:#A7F3D0}
+html[data-theme="dark"] .credential-card.internal .visibility-badge{background:rgba(110,168,255,.13);border-color:rgba(110,168,255,.26);color:#BFD7FF}
+@media(max-width:860px){.credential-grid{grid-template-columns:1fr}}@media(max-width:720px){.credential-row{grid-template-columns:1fr;gap:4px}.secret-chip{min-width:0;width:100%;justify-content:space-between}.credentials-toolbar{align-items:flex-start}.visibility-filters{border-radius:14px;flex-wrap:wrap}}
+
+
+/* v14 final design alignment */
+.route,.main,.card,.cardbody,.feature-loaded,.ticket-layout,.ticket-layout main,.detail-page-header,.detail-grid{min-width:0}
+.table-wrap{display:block;overflow-x:auto!important;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+.table-wrap table{border-collapse:collapse}
+.status,.pill.status,td .status{font-weight:750;letter-spacing:0;text-transform:none}
+.pill{font-weight:760}
+.cardhead h2{font-weight:760}
+th{font-weight:760}
+.credential-card{min-width:0;display:flex;flex-direction:column}
+.credential-card-header{min-width:0}
+.credential-title{font-size:16px;font-weight:760;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.visibility-badge{border:1px solid rgba(22,163,74,.22);font-weight:760}
+.credential-card.internal .inline-icon-btn:hover{background:rgba(37,99,235,.10);color:#1E3A8A}
+.credential-value{max-width:100%;overflow:hidden}
+.credential-value .mono{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.credential-row{min-width:0}
+.secret-chip{max-width:100%}
+.detail-card h3{font-weight:760}
+.file-action-group .icon-action{color:#475569}
+.file-action-group .icon-action:hover{color:var(--brand-primary)}
+html[data-theme="dark"] .credential-card.internal .inline-icon-btn:hover{background:rgba(110,168,255,.12);color:#BFD7FF}
+html[data-theme="dark"] .file-action-group .icon-action{color:#CBD5E1}
+@media(max-width:1080px){.credential-grid{grid-template-columns:repeat(2,minmax(260px,1fr))}}
+@media(max-width:760px){.credential-grid{grid-template-columns:1fr}.credential-title{font-size:15px}.visibility-badge{font-size:10.5px}.ticket-layout table{min-width:980px!important}}
+
+
+/* v15 final anonymization & interaction polish */
+.logo{ text-transform:uppercase; letter-spacing:.01em; }
+.row-clickable{ cursor:pointer; }
+.row-clickable:hover td,
+.row-clickable:focus-visible td{ background:rgba(37,99,235,.065); }
+.row-clickable:focus-visible{ outline:2px solid rgba(37,99,235,.34); outline-offset:-2px; }
+.tabs-shell{
+  display:grid;
+  grid-template-columns:28px minmax(0,1fr) 28px;
+  align-items:end;
+  gap:4px;
+  margin-top:16px;
+  border-bottom:1px solid var(--line);
+}
+.tabs-shell .tabs{
+  margin-top:0!important;
+  border-bottom:0!important;
+  min-width:0;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scroll-behavior:smooth;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+.tabs-shell .tabs::-webkit-scrollbar{display:none;height:0;width:0}
+.tabs{scrollbar-width:none;-ms-overflow-style:none}
+.tabs::-webkit-scrollbar{display:none;height:0;width:0}
+.tab-arrow{
+  width:28px;
+  height:40px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:var(--muted);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  font-size:18px;
+  line-height:1;
+  padding:0;
+}
+.tab-arrow:hover:not(.disabled),
+.tab-arrow:focus-visible:not(.disabled){
+  background:rgba(37,99,235,.08);
+  color:var(--brand-primary);
+  outline:none;
+}
+.tab-arrow.disabled{opacity:.22;cursor:default;pointer-events:none}
+html[data-theme="dark"] .row-clickable:hover td,
+html[data-theme="dark"] .row-clickable:focus-visible td{background:rgba(110,168,255,.11)}
+html[data-theme="dark"] .tab-arrow:hover:not(.disabled),
+html[data-theme="dark"] .tab-arrow:focus-visible:not(.disabled){background:rgba(110,168,255,.14);color:var(--brand-primary)}
+@media(max-width:820px){.tabs-shell{grid-template-columns:28px minmax(0,1fr) 28px}.tab-arrow{height:38px}.tabs-shell .tab{padding-left:14px;padding-right:14px}}
+
+</style>
+</head>
+<body>
+
+<svg class="icon-sprite" aria-hidden="true" focusable="false">
+  <symbol id="icon-external-link" viewBox="0 0 24 24">
+    <path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+  </symbol>
+  <symbol id="icon-cloud-user" viewBox="0 0 24 24">
+    <path d="M17.5 16.5H7.8a4 4 0 1 1 .8-7.9A5.4 5.4 0 0 1 19 11.2a3.1 3.1 0 0 1-1.5 5.3Z"></path>
+    <circle cx="12" cy="12" r="2.2"></circle>
+    <path d="M8.8 16.5c.55-1.6 1.8-2.5 3.2-2.5s2.65.9 3.2 2.5"></path>
+  </symbol>
+  <symbol id="icon-server" viewBox="0 0 24 24">
+    <rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect><rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect><line x1="6" x2="6.01" y1="6" y2="6"></line><line x1="6" x2="6.01" y1="18" y2="18"></line>
+  </symbol>
+  <symbol id="icon-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></symbol>
+  <symbol id="icon-shield" viewBox="0 0 24 24">
+    <path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8Z"></path>
+    <path d="M12 10v5"></path>
+    <path d="M12 7h.01"></path>
+  </symbol>
+  <symbol id="icon-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18v3h3l6.7-6.7a4 4 0 0 0 5-5l-2.4 2.4-2-2 2.4-2.4Z"></path></symbol>
+  <symbol id="icon-file" viewBox="0 0 24 24">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path>
+    <path d="M14 2v6h6"></path>
+    <path d="M8 12h8"></path>
+    <path d="M8 16h8"></path>
+    <path d="M8 20h5"></path>
+  </symbol>
+  <symbol id="icon-message" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"></path></symbol>
+
+  <symbol id="icon-dollar" viewBox="0 0 24 24">
+    <path d="M12 2v20"></path>
+    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"></path>
+  </symbol>
+  <symbol id="icon-pdf" viewBox="0 0 24 24">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path>
+    <path d="M14 2v6h6"></path>
+    <path d="M7 15h1.5a1.5 1.5 0 0 0 0-3H7v6"></path>
+    <path d="M12 18v-6h1.2a2.8 2.8 0 0 1 0 6H12"></path>
+    <path d="M17 18v-6h3"></path>
+    <path d="M17 15h2"></path>
+  </symbol>
+  <symbol id="icon-download" viewBox="0 0 24 24">
+    <path d="M12 3v12"></path>
+    <path d="m7 10 5 5 5-5"></path>
+    <path d="M5 21h14"></path>
+  </symbol>
+
+  <symbol id="icon-copy" viewBox="0 0 24 24">
+    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+  </symbol>
+  <symbol id="icon-eye" viewBox="0 0 24 24">
+    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path>
+    <circle cx="12" cy="12" r="3"></circle>
+  </symbol>
+</svg>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">OH</div><div><div style="font-weight:1100">Operations Hub</div></div></div>
+    <nav class="nav" id="nav">
+      <a href="#" data-route="start" class="nav-main" onclick="go('start');return false;"><span>Customer Management</span></a>
+      <div class="nav-sub">
+        <a href="#" data-route="profile" onclick="go('profile');return false;"><span>Customer Profile</span></a>
+        <a href="#" data-route="contacts" onclick="go('contacts');return false;"><span>Contact Persons</span></a>
+        <a href="#" data-route="users" onclick="go('users');return false;"><span>Users</span></a>
+        <a href="#" data-route="tickets" onclick="go('tickets');return false;"><span>Tickets</span></a>
+        <a href="#" data-route="offers" onclick="go('offers');return false;"><span>Offers</span></a>
+        <a href="#" data-route="orders" onclick="go('orders');return false;"><span>Orders</span></a>
+        <a href="#" data-route="contracts" onclick="go('contracts');return false;"><span>Contracts</span></a>
+        <a href="#" data-route="invoices" onclick="go('invoices');return false;"><span>Invoices</span></a>
+      </div>
+      <div class="adjacent-nav" aria-label="Adjacent MVP areas">
+        <div class="nav-title">Adjacent MVP Areas</div>
+        <div class="adjacent-link"><span>Support</span><span>not expanded</span></div>
+        <div class="adjacent-link"><span>Reports</span><span>not expanded</span></div>
+      </div>
+    </nav>
+    <div class="flow-note">
+      <div class="muted" style="font-size:12px;font-weight:1100;letter-spacing:.06em;text-transform:uppercase">Portfolio Notes</div>
+      <div class="divider"></div>
+      <ul>
+        <li>Feature-first handover logic</li>
+        <li>Customer ID entry per feature</li>
+        <li>Read-only replacement for a legacy customer information tool</li>
+        <li>Ticket creation as intentional exception</li>
+        <li>Support and Reports are adjacent MVP areas, not expanded in this Customer Management prototype</li>
+      </ul>
+      <div class="divider"></div>
+      <div class="sub" style="font-size:12px">
+        Product learning: later MVP refinement moved Customer Management toward a customer-context-first entry point on the area start page. Contact Persons were later consolidated into Customer Profile.
+      </div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="toprow">
+      <button class="theme-toggle" type="button" id="themeToggle" aria-label="Toggle dark mode" aria-pressed="false">
+        <span class="theme-toggle-track"><span class="theme-toggle-knob"></span></span>
+        <span id="themeLabel">Light</span>
+      </button>
+      <div class="user"><span class="dot"></span><span class="user-name">internal user</span><span class="pill readonly">read-only</span></div>
+    </div>
+
+    <section id="route-start" class="route active">
+      <div class="hero-split">
+        <div class="hero-panel">
+          <div class="label">Area Overview</div>
+          <h1>Customer Management handover prototype</h1>
+          <div class="sub" style="font-size:15px;max-width:780px">This portfolio mock-up consolidates the initial Customer Management handover into one coherent area. It focuses on replacing a legacy customer information tool with read-only internal access to customer-related context.</div>
+        </div>
+        <div class="hero-side">
+          <div>
+            <div class="label">Design Focus</div>
+            <div class="mini-metric"><span>Legacy replacement</span><strong>Customer information tool</strong></div>
+            <div class="mini-metric"><span>Scope</span><strong>Read-only context</strong></div>
+            <div class="mini-metric"><span>Entry model</span><strong>Feature-level search</strong></div>
+            <div class="mini-metric"><span>Exception</span><strong>Ticket creation</strong></div>
+          </div>
+          <div class="hint"><strong>Portfolio framing:</strong> This stage shows the initial feature-first handover logic before the later Customer Management main search and broader customer-context navigation emerged during MVP refinement.</div>
+        </div>
+      </div>
+      <section class="card">
+        <div class="cardhead"><h2>Area building blocks</h2></div>
+        <div class="cardbody"><div class="grid3">
+          <div class="box feature-card" onclick="go('profile')"><div><div class="feature-icon">CP</div><h2>Customer Profile</h2><div class="sub">Customer master data, address and internal responsibilities in a read-only profile view.</div></div><button class="btn text">Open feature</button></div>
+          <div class="box feature-card" onclick="go('contacts')"><div><div class="feature-icon">CO</div><h2>Contact Persons</h2><div class="sub">Contacts, escalation priority and main contact information for a selected Customer ID.</div></div><button class="btn text">Open feature</button></div>
+          <div class="box feature-card" onclick="go('users')"><div><div class="feature-icon">US</div><h2>Users</h2><div class="sub">Cloud portal users and their assigned Customer IDs, roles and account states.</div></div><button class="btn text">Open feature</button></div>
+          <div class="box feature-card" onclick="go('tickets')"><div><div class="feature-icon">TS</div><h2>Tickets</h2><div class="sub">Support tickets, preview and ticket creation as the only initial active workflow.</div></div><button class="btn text">Open feature</button></div>
+          <div class="box feature-card" onclick="go('offers')"><div><div class="feature-icon">OF</div><h2>Offers</h2><div class="sub">Read-only offer and deal overview for the selected customer context.</div></div><button class="btn text">Open feature</button></div>
+          <div class="box feature-card" onclick="go('orders')"><div><div class="feature-icon">OR</div><h2>Orders</h2><div class="sub">Read-only internal order list with status and fulfillment context.</div></div><button class="btn text">Open feature</button></div>
+          <div class="box feature-card" onclick="go('contracts')"><div><div class="feature-icon">CT</div><h2>Contracts</h2><div class="sub">Read-only contract context with table, detail cards and basic access data.</div></div><button class="btn text">Open feature</button></div>
+          <div class="box feature-card" onclick="go('invoices')"><div><div class="feature-icon">IN</div><h2>Invoices</h2><div class="sub">Billing context with invoices, attachments, payment status and PDF actions.</div></div><button class="btn text">Open feature</button></div>
+        </div><div class="adjacent-area-note"><strong>Wider MVP context:</strong> Support and Reports were planned as adjacent Operations Hub areas. They are visible in the shell, but intentionally not expanded in this Customer Management handover prototype.</div></div>
+      </section>
+    </section>
+
+    <section id="route-profile" class="route feature" data-feature="profile">
+      <div class="feature-search entry-shell"><h1>Customer Profile</h1><div class="sub">Enter a Customer ID to open the read-only customer profile.</div><form class="entry-form" onsubmit="loadFeature(event,'profile')"><label><span class="label">Customer ID</span><input name="customerId" value="CUST-10482" autocomplete="off"/></label><button class="btn primary" type="submit">Open Customer Profile</button></form></div>
+      <div class="feature-loaded hidden">
+        <section class="card"><div class="cardhead"><div class="selected-customer"><span class="pill">Selected Customer</span><span class="pill neutral" data-customer-label></span></div><div class="header-actions"><button class="btn neutral small" onclick="resetFeature('profile')">Change Customer</button></div></div>
+          <div class="cardbody">
+            <div class="tabs" data-tabs="profile"><div class="tab active" data-tab="basic">Basic Data</div><div class="tab" data-tab="address">Address & Billing</div><div class="tab" data-tab="internal">Internal Responsibilities</div><div class="tab" data-tab="quicklinks">Quick Links</div></div>
+            <div class="tabpane show" data-pane="profile-basic"><div class="review-table">
+              <div class="review-row"><div class="review-label">Company / Client</div><div class="review-value">Example Industries GmbH</div></div>
+              <div class="review-row"><div class="review-label">Customer ID</div><div class="review-value mono" data-current-id>CUST-10482</div></div>
+              <div class="review-row"><div class="review-label">Organization</div><div class="review-value">Example Group</div></div>
+              <div class="review-row"><div class="review-label">ABC Code</div><div class="review-value">A</div></div>
+              <div class="review-row"><div class="review-label">Classification</div><div class="review-value">Premium</div></div>
+              <div class="review-row"><div class="review-label">Language</div><div class="review-value">English</div></div>
+              <div class="review-row"><div class="review-label">Customer Status</div><div class="review-value"><span class="status ok">Active</span></div></div>
+              <div class="review-row"><div class="review-label">Entry Date</div><div class="review-value">2022-05-04</div></div>
+            </div></div>
+            <div class="tabpane" data-pane="profile-address"><div class="review-table">
+              <div class="review-row"><div class="review-label">Street</div><div class="review-value">Example Street 12a</div></div>
+              <div class="review-row"><div class="review-label">Postal Code / City</div><div class="review-value">50667 Example City</div></div>
+              <div class="review-row"><div class="review-label">Country</div><div class="review-value">Germany</div></div>
+              <div class="review-row"><div class="review-label">Invoice Email</div><div class="review-value">billing@example-industries.test</div></div>
+              <div class="review-row"><div class="review-label">Payment Type</div><div class="review-value">Invoice</div></div>
+              <div class="review-row"><div class="review-label">Billing Cycle</div><div class="review-value">Monthly</div></div>
+            </div></div>
+            <div class="tabpane" data-pane="profile-internal"><div class="review-table">
+              <div class="review-row"><div class="review-label">Engineering Squad</div><div class="review-value">Platform Operations</div></div>
+              <div class="review-row"><div class="review-label">Service Manager</div><div class="review-value">Alex Meyer</div></div>
+              <div class="review-row"><div class="review-label">Sales Owner</div><div class="review-value">Jamie Lee</div></div>
+            </div></div>
+            <div class="tabpane" data-pane="profile-quicklinks"><div class="hint">Quick links are read-only navigation helpers for internal teams. They do not change customer data.</div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn neutral small" onclick="toast('Open ERP (prototype)')">ERP</button><button class="btn neutral small" onclick="toast('Open CRM (prototype)')">CRM</button><button class="btn neutral small" onclick="toast('Open documentation (prototype)')">Documentation</button><button class="btn neutral small" onclick="toast('Open customer portal (prototype)')">Customer Portal</button></div></div>
+          </div></section>
+      </div>
+    </section>
+
+    <section id="route-contacts" class="route feature" data-feature="contacts">
+      <div class="feature-search entry-shell"><h1>Contact Persons</h1><div class="sub">Enter a Customer ID to view contacts, escalation order and billing contact information.</div><form class="entry-form" onsubmit="loadFeature(event,'contacts')"><label><span class="label">Customer ID</span><input name="customerId" value="CUST-10482" autocomplete="off"/></label><button class="btn primary" type="submit">Open Contact Persons</button></form></div>
+      <div class="feature-loaded hidden"><section class="card"><div class="cardhead"><div class="selected-customer"><span class="pill">Selected Customer</span><span class="pill neutral" data-customer-label></span></div><button class="btn neutral small" onclick="resetFeature('contacts')">Change Customer</button></div><div class="cardbody">
+        <div class="tabs" data-tabs="contacts"><div class="tab active" data-tab="contacts">Contacts</div><div class="tab" data-tab="escalation">Escalation Priority</div><div class="tab" data-tab="main">Main Contact</div><div class="tab" data-tab="billing">Billing Contacts</div></div>
+        <div class="tabpane show" data-pane="contacts-contacts"><div class="table-wrap"><table><thead><tr><th>Name</th><th>Types / Roles</th><th>Email</th><th>Phone</th><th>Escalation</th><th>Source</th></tr></thead><tbody><tr><td><div class="contact-name-row"><strong>Taylor Morgan</strong><span class="main-contact-badge">Main contact</span></div></td><td>Standard, DPA Contact</td><td>taylor.morgan@example.test</td><td>+49 221 000000</td><td>—</td><td>Customer Portal / ERP</td></tr><tr><td>Erika Sample</td><td>Billing</td><td>billing@example.test</td><td>+49 221 111111</td><td><span class="status wait">On list</span></td><td>Manual</td></tr><tr><td>Ben Bradley</td><td>Technical</td><td>ben.bradley@example.test</td><td>+49 221 222222</td><td><span class="status wait">On list</span></td><td>Manual</td></tr></tbody></table></div></div>
+        <div class="tabpane" data-pane="contacts-escalation"><div class="table-wrap"><table><thead><tr><th>Priority</th><th>First Name</th><th>Last Name</th><th>Type</th><th>Comment</th></tr></thead><tbody><tr><td><strong>1</strong></td><td>Erika</td><td>Sample</td><td>Contact Person</td><td>Billing escalation first</td></tr><tr><td><strong>2</strong></td><td>Ben</td><td>Bradley</td><td>Contact Person</td><td>Technical escalation</td></tr></tbody></table></div></div>
+        <div class="tabpane" data-pane="contacts-main"><div class="review-table"><div class="review-row"><div class="review-label">Name</div><div class="review-value">Taylor Morgan</div></div><div class="review-row"><div class="review-label">Email</div><div class="review-value">taylor.morgan@example.test</div></div><div class="review-row"><div class="review-label">Phone</div><div class="review-value">+49 221 000000</div></div><div class="review-row"><div class="review-label">Source</div><div class="review-value">Merged customer data</div></div></div></div>
+        <div class="tabpane" data-pane="contacts-billing"><div class="table-wrap"><table><thead><tr><th>Type</th><th>Address / Number</th><th>Source</th></tr></thead><tbody><tr><td>Billing Email</td><td>billing@example.test</td><td>Customer Portal</td></tr><tr><td>Main Email</td><td>taylor.morgan@example.test</td><td>Customer Portal</td></tr><tr><td>Main Phone</td><td>+49 221 000000</td><td>Customer Portal</td></tr></tbody></table></div></div>
+      </div></section></div>
+    </section>
+
+    <section id="route-users" class="route feature" data-feature="users">
+      <div class="feature-search entry-shell"><h1>Users</h1><div class="sub">Enter a Customer ID to view related cloud portal users and assigned customer contexts.</div><form class="entry-form" onsubmit="loadFeature(event,'users')"><label><span class="label">Customer ID</span><input name="customerId" value="CUST-10482" autocomplete="off"/></label><button class="btn primary" type="submit">Open Users</button></form></div>
+      <div class="feature-loaded hidden"><section class="card"><div class="cardhead"><div class="selected-customer"><span class="pill">Selected Customer</span><span class="pill neutral" data-customer-label></span></div><button class="btn neutral small" onclick="resetFeature('users')">Change Customer</button></div><div class="cardbody"><div class="dev-note"><strong>Dev note:</strong> This view supports the Operations Hub as an internal starting point. From here, internal users can navigate to the related customer portal context when deeper account inspection is needed.</div><div class="table-wrap" style="margin-top:14px"><table><thead><tr><th>User</th><th>Email</th><th>Assigned Customer IDs</th><th>Role Context</th><th>Status</th><th>Portal Access</th></tr></thead><tbody><tr><td>Max Sample</td><td>max.sample@example.test</td><td><span class="pill neutral">CUST-10482</span> <span class="pill neutral">CUST-10482-1</span></td><td>Admin, Support</td><td><span class="status ok">Active</span></td><td><div class="action-icons"><button class="icon-action" type="button" title="Open customer portal" aria-label="Open customer portal" onclick="toast('Open customer portal user context (prototype)')"><svg class="icon"><use href="#icon-cloud-user"></use></svg></button></div></td></tr><tr><td>Erika Sample</td><td>erika.sample@example.test</td><td><span class="pill neutral">CUST-10482</span></td><td>Billing</td><td><span class="status ok">Active</span></td><td><div class="action-icons"><button class="icon-action" type="button" title="Open customer portal" aria-label="Open customer portal" onclick="toast('Open customer portal user context (prototype)')"><svg class="icon"><use href="#icon-cloud-user"></use></svg></button></div></td></tr><tr><td>Read Only User</td><td>readonly@example.test</td><td><span class="pill neutral">CUST-10482</span></td><td>Read-only</td><td><span class="status wait">Pending</span></td><td><div class="action-icons"><button class="icon-action" type="button" title="Open customer portal" aria-label="Open customer portal" onclick="toast('Open customer portal user context (prototype)')"><svg class="icon"><use href="#icon-cloud-user"></use></svg></button></div></td></tr></tbody></table></div></div></section></div>
+    </section>
+
+    <section id="route-tickets" class="route feature" data-feature="tickets">
+      <div class="feature-search entry-shell"><h1>Tickets</h1><div class="sub">Enter a Customer ID to open the support workspace. Ticket creation is the intentional exception to the read-only Customer Management handover.</div><form class="entry-form" onsubmit="loadFeature(event,'tickets')"><label><span class="label">Customer ID</span><input name="customerId" value="CUST-10482" autocomplete="off"/></label><button class="btn primary" type="submit">Open Tickets & Support</button></form></div>
+      <div class="feature-loaded hidden"><section class="card"><div class="cardhead"><div class="selected-customer"><span class="pill">Selected Customer</span><span class="pill neutral" data-customer-label></span></div><button class="btn neutral small" onclick="resetFeature('tickets')">Change Customer</button></div><div class="cardbody"><div class="dev-note"><strong>Scope note:</strong> Ticket creation was included in the initial Tickets & Support handover to define the intended internal support workflow. This is the only active workflow kept in the unbranded handover state.</div><div class="ticket-layout" style="margin-top:14px"><aside><div class="side-panel"><div class="label">Ticket Creation</div><div class="ticket-system-note">Selecting a ticket type opens the corresponding ticket system interface in this prototype.</div><button class="sidebtn" data-cat="Service Request"><span class="ticket-category-icon"><svg class="icon icon-sm"><use href="#icon-wrench"></use></svg></span><span>Service Request</span></button><button class="sidebtn" data-cat="Products / Services / Contracts"><span class="ticket-category-icon"><svg class="icon icon-sm"><use href="#icon-file"></use></svg></span><span>Products / Services / Contracts</span></button><button class="sidebtn" data-cat="Incident"><span class="ticket-category-icon"><svg class="icon icon-sm"><use href="#icon-alert"></use></svg></span><span>Incident</span></button><button class="sidebtn" data-cat="Security Incident"><span class="ticket-category-icon"><svg class="icon icon-sm"><use href="#icon-shield"></use></svg></span><span>Security Incident</span></button><button class="sidebtn" data-cat="Sales Request"><span class="ticket-category-icon"><svg class="icon icon-sm"><use href="#icon-dollar"></use></svg></span><span>Sales Request</span></button><button class="sidebtn" data-cat="Feedback"><span class="ticket-category-icon"><svg class="icon icon-sm"><use href="#icon-message"></use></svg></span><span>Feedback</span></button><div class="divider"></div><button class="btn neutral small" style="width:100%;justify-content:center" onclick="openIssueSearch()">Search Issues</button><div class="ticket-system-note">Search opens the corresponding issue navigator in the ticket system interface.</div></div><div class="side-panel" style="margin-top:14px"><div class="label">SLA / Timers</div><div class="sla-row"><span>First Response</span><strong class="mono" id="slaFR">00:30:00</strong></div><div class="sla-row"><span>Resolution</span><strong class="mono" id="slaRes">04:00:00</strong></div><div class="sla-row"><span>SLA Status</span><span class="status ok" id="slaState">On Track</span></div></div></aside><main><div class="filters"><label><span class="label">Search tickets</span><input id="ticketSearch" placeholder="Search ID, subject or requester" oninput="renderTickets()"></label></div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Subject</th><th>Status</th><th>Priority</th><th>Type</th><th>Assignee</th><th>Updated</th><th>Preview</th></tr></thead><tbody id="ticketRows"></tbody></table></div><div class="preview-box" id="ticketPreview">Select a ticket to open the preview.</div></main></div></div></section></div>
+    </section>
+
+    <section id="route-offers" class="route feature" data-feature="offers">
+      <div class="feature-search entry-shell"><h1>Offers</h1><div class="sub">Enter a Customer ID to view customer-specific offers and deals.</div><form class="entry-form" onsubmit="loadFeature(event,'offers')"><label><span class="label">Customer ID</span><input name="customerId" value="CUST-10482" autocomplete="off"/></label><button class="btn primary" type="submit">Open Offers</button></form></div>
+      <div class="feature-loaded hidden"><section class="card"><div class="cardhead"><div class="selected-customer"><span class="pill">Selected Customer</span><span class="pill neutral" data-customer-label></span></div><button class="btn neutral small" onclick="resetFeature('offers')">Change Customer</button></div><div class="cardbody"><div class="filters"><div class="qf-wrap"><span class="qf-label">Status</span><span class="qf" data-filter="offer"><button class="active" data-value="ALL">All</button><button data-value="OPEN">Open</button><button data-value="WON">Won</button><button data-value="DRAFT">Draft</button></span></div><label><span class="label">Search within offers</span><input id="offerSearch" placeholder="Offer ID, title or owner" oninput="renderOffers()"></label></div><div class="table-wrap"><table><thead><tr><th>Status</th><th>Offer ID</th><th>Offer Title</th><th>Offer Date</th><th>Value</th><th>Source</th><th>Imported</th></tr></thead><tbody id="offerRows"></tbody></table></div></div></section></div>
+    </section>
+
+    <section id="route-orders" class="route feature" data-feature="orders">
+      <div class="feature-search entry-shell"><h1>Orders</h1><div class="sub">Enter a Customer ID to view internal orders for the selected customer.</div><form class="entry-form" onsubmit="loadFeature(event,'orders')"><label><span class="label">Customer ID</span><input name="customerId" value="CUST-10482" autocomplete="off"/></label><button class="btn primary" type="submit">Open Orders</button></form></div>
+      <div class="feature-loaded hidden"><section class="card"><div class="cardhead"><div class="selected-customer"><span class="pill">Selected Customer</span><span class="pill neutral" data-customer-label></span></div><button class="btn neutral small" onclick="resetFeature('orders')">Change Customer</button></div><div class="cardbody"><div class="filters"><div class="qf-wrap"><span class="qf-label">Status</span><span class="qf" data-filter="order"><button class="active" data-value="ALL">All</button><button data-value="PENDING">Pending</button><button data-value="APPROVED">Approved</button><button data-value="COMPLETED">Completed</button></span></div><label><span class="label">Search within orders</span><input id="orderSearch" placeholder="Order ID, product or project" oninput="renderOrders()"></label></div><div class="table-wrap"><table><thead><tr><th>Status</th><th>Order Type</th><th>Project ID</th><th>Order ID</th><th>Product</th><th>Order Date</th><th>Initiator</th><th>Fulfillment</th><th>Actions</th></tr></thead><tbody id="orderRows"></tbody></table></div></div></section></div>
+    </section>
+
+    <section id="route-contracts" class="route feature" data-feature="contracts">
+      <div class="feature-search entry-shell"><h1>Contracts</h1><div class="sub">Enter a Customer ID to view read-only contract and access data context.</div><form class="entry-form" onsubmit="loadFeature(event,'contracts')"><label><span class="label">Customer ID</span><input name="customerId" value="CUST-10482" autocomplete="off"/></label><button class="btn primary" type="submit">Open Contracts</button></form></div>
+      <div class="feature-loaded hidden"><section class="card"><div class="cardhead"><div class="selected-customer"><span class="pill">Selected Customer</span><span class="pill neutral" data-customer-label></span></div><button class="btn neutral small" onclick="resetFeature('contracts')">Change Customer</button></div><div class="cardbody"><div class="hint">Contract data is shown as internal customer context. This unbranded stage keeps the view read-only: no external technical links, ticket creation from contract context or credential copy actions yet.</div><div class="filters"><div class="qf-wrap"><span class="qf-label">Status</span><span class="qf" data-filter="contract"><button class="active" data-value="ALL">All</button><button data-value="ACTIVE">Active</button><button data-value="ENDING">Ending</button><button data-value="INACTIVE">Inactive</button></span></div><label><span class="label">Search contracts</span><input id="contractSearch" placeholder="Contract ID, product or source" oninput="renderContracts()"></label></div><div class="table-wrap"><table><thead><tr><th>Status</th><th>Contract ID</th><th>Product / Service</th><th>Start Date</th><th>End / Renewal</th><th>Billing Cycle</th></tr></thead><tbody id="contractRows"></tbody></table></div></div></section></div>
+    </section>
+
+
+    <section id="route-contract-detail" class="route detail-route">
+      <div id="contractDetailPage"></div>
+    </section>
+
+    <section id="route-invoices" class="route feature" data-feature="invoices">
+      <div class="feature-search entry-shell"><h1>Invoices</h1><div class="sub">Enter a Customer ID to view read-only invoice and attachment information.</div><form class="entry-form" onsubmit="loadFeature(event,'invoices')"><label><span class="label">Customer ID</span><input name="customerId" value="CUST-10482" autocomplete="off"/></label><button class="btn primary" type="submit">Open Invoices</button></form></div>
+      <div class="feature-loaded hidden"><section class="card"><div class="cardhead"><div class="selected-customer"><span class="pill">Selected Customer</span><span class="pill neutral" data-customer-label></span></div><button class="btn neutral small" onclick="resetFeature('invoices')">Change Customer</button></div><div class="cardbody"><div class="hint">Invoices follow the existing billing-system logic and are included as necessary customer context. PDF files can be opened or downloaded; structured XML export is a later extension.</div><div class="tabs" data-tabs="invoices"><div class="tab active" data-tab="overview">Invoices</div><div class="tab" data-tab="attachments">Attachments</div></div><div class="tabpane show" data-pane="invoices-overview"><div class="filters"><div class="qf-wrap"><span class="qf-label">Status</span><span class="qf" data-filter="invoice-status"><button class="active" data-value="ALL">All</button><button data-value="PAID">Paid</button><button data-value="OPEN">Open</button><button data-value="OVERDUE">Overdue</button></span></div><div class="qf-wrap"><span class="qf-label">Type</span><span class="qf" data-filter="invoice-type"><button class="active" data-value="ALL">All</button><button data-value="INVOICE">Invoice</button><button data-value="CORRECTION">Correction</button></span></div><label><span class="label">Search invoices</span><input id="invoiceSearch" placeholder="Invoice number or period" oninput="renderInvoices()"></label></div><div class="table-wrap"><table><thead><tr><th>Status</th><th>Invoice Number</th><th>Period</th><th>Date</th><th>Due Date</th><th>Type</th><th>Amount</th><th>Actions</th></tr></thead><tbody id="invoiceRows"></tbody></table></div></div><div class="tabpane" data-pane="invoices-attachments"><div class="table-wrap"><table><thead><tr><th>File</th><th>Invoice</th><th>Type</th><th>Created</th><th>Actions</th></tr></thead><tbody id="attachmentRows"></tbody></table></div><div class="adjacent-area-note"><strong>Planned extension:</strong> XML download can be added later for structured invoice processing.</div></div></div></section></div>
+    </section>
+
+    <section id="route-invoice-detail" class="route detail-route">
+      <div id="invoiceDetailPage"></div>
+    </section>
+
+  </main>
+</div>
+<div id="toast" class="toast"><div><span id="toastText"></span></div></div>
+<script>
+const DEMO_CUSTOMERS={"CUST-10482":"CUST-10482 · Example Industries GmbH"};
+const tickets=[
+{id:'TS-10021',subject:'Login fails for SSO users after password reset',status:'Open',priority:'High',type:'Incident',assignee:'Alex Meyer',requester:'Example Industries',updated:'2025-10-20 14:05',description:'Users report SSO login failure immediately after password resets. Suspected session invalidation timing issue.',issueKey:'CX-4790',systemId:'RT#82144'},
+{id:'TS-10022',subject:'Add export to CSV on billing report',status:'In Progress',priority:'Medium',type:'Task',assignee:'Jamie Lee',requester:'Example Industries',updated:'2025-10-21 09:48',description:'Finance requests CSV export on billing report with custom delimiter and date presets.',issueKey:'CX-5122',systemId:'RT#82192'},
+{id:'TS-10023',subject:'Webhook signature mismatch on sandbox',status:'Waiting for Customer',priority:'Low',type:'Question',assignee:'—',requester:'Example Industries',updated:'2025-10-22 11:30',description:'Webhook signatures differ between sandbox and production. Environment secret mismatch likely.',issueKey:'CX-5198',systemId:'RT#82211'}];
+const offers=[
+{status:'OPEN',id:'OFF-100848',title:'Managed Cloud Renewal',date:'2025-11-13',value:'185,000 EUR',source:'Sales system',imported:'Yes'},
+{status:'WON',id:'OFF-100588',title:'Support Package Extension',date:'2025-10-04',value:'92,000 EUR',source:'Sales system',imported:'Yes'},
+{status:'DRAFT',id:'OFF-100375',title:'Security Review Bundle',date:'2025-09-15',value:'28,000 EUR',source:'Import',imported:'No'}];
+const orders=[
+{status:'PENDING',type:'Booking',project:'P-12011',id:'ORD-900001',product:'Managed Cloud Platform',date:'2025-08-22 10:11',initiator:'a.meyer',fulfillment:'10%'},
+{status:'COMPLETED',type:'Modification',project:'P-98331',id:'ORD-900010',product:'Database Add-on',date:'2025-08-20 13:27',initiator:'j.lee',fulfillment:'100%'},
+{status:'APPROVED',type:'Booking',project:'P-88371',id:'ORD-900031',product:'Support Package',date:'2025-07-29 13:38',initiator:'a.meyer',fulfillment:'60%'}];
+const contracts=[
+{id:'CON-10048',product:'Managed Cloud Platform',status:'ACTIVE',start:'2024-01-01',end:'2026-12-31',cycle:'Monthly',source:'Contract system',area:'Production',owner:'Platform Operations',customer:'Example Industries GmbH',access:[{name:'System User',visibility:'customer-visible',username:'cust-admin',secret:'••••••••••••',url:'https://customer-portal.example.test/tenant/CUST-10482',description:'Admin user for the customer cloud tenant',namespace:'primary'},{name:'VPN PSK',visibility:'customer-visible',username:'vpn-azure-it-203-0-113-7',secret:'••••••••••••',url:'203.0.113.7',description:'VPN pre-shared key for managed network access',namespace:'network'},{name:'Root',visibility:'internal-only',username:'root-admin',secret:'••••••••••••',url:'https://internal.example.test/device/primary',description:'Internal maintenance access for support and operations',namespace:'internal'}],contents:[{id:'621163',content:'Managed Cloud Platform - Storage GB',quantity:'1 GB',activation:'2026-06-30',nextInvoice:'2026-07-01',netPrice:'0.00 EUR',info:'',cancellation:'—'},{id:'621162',content:'Managed Cloud Platform - Cluster h',quantity:'1 H',activation:'2026-06-30',nextInvoice:'2026-07-01',netPrice:'0.00 EUR',info:'',cancellation:'—'},{id:'621161',content:'Managed Cloud Platform',quantity:'1 M',activation:'2026-06-30',nextInvoice:'2026-07-01',netPrice:'0.00 EUR',info:'',cancellation:'—'},{id:'621160',content:'Managed Cloud Platform - Public IP addresses h',quantity:'1 H',activation:'2026-06-30',nextInvoice:'2026-07-01',netPrice:'0.00 EUR',info:'',cancellation:'—'},{id:'621159',content:'Managed Cloud Platform - Load balancer h',quantity:'1 H',activation:'2026-06-30',nextInvoice:'2026-07-01',netPrice:'0.00 EUR',info:'',cancellation:'—'},{id:'621158',content:'Managed Cloud Platform - vCPU h',quantity:'1 H',activation:'2026-06-30',nextInvoice:'2026-07-01',netPrice:'0.00 EUR',info:'',cancellation:'—'},{id:'621157',content:'Managed Cloud Platform - Traffic outgoing',quantity:'1 GB',activation:'2026-06-30',nextInvoice:'2026-07-01',netPrice:'0.00 EUR',info:'',cancellation:'—'},{id:'621156',content:'Managed Cloud Platform - vRAM h',quantity:'1 H',activation:'2026-06-30',nextInvoice:'2026-07-01',netPrice:'0.00 EUR',info:'',cancellation:'—'}]},
+{id:'CON-10049',product:'Support Package',status:'ACTIVE',start:'2024-06-01',end:'2025-12-31',cycle:'Monthly',source:'Contract system',area:'Support',owner:'Service Desk',customer:'Example Industries GmbH',access:[{name:'Support Portal',visibility:'customer-visible',username:'support-user',secret:'••••••••',url:'https://support.example.test/customer/CUST-10482',description:'Customer-visible support portal access',namespace:'support'}],contents:[{id:'621201',content:'Service desk support',quantity:'20 H',activation:'2024-06-01',nextInvoice:'2026-07-01',netPrice:'1,200.00 EUR',info:'',cancellation:'—'},{id:'621202',content:'Escalation coverage',quantity:'1 Package',activation:'2024-06-01',nextInvoice:'2026-07-01',netPrice:'600.00 EUR',info:'',cancellation:'—'}]},
+{id:'CON-10050',product:'Legacy Hosting Add-on',status:'ENDING',start:'2021-04-01',end:'2026-03-31',cycle:'Yearly',source:'Contract system',area:'Legacy Services',owner:'Operations',customer:'Example Industries GmbH',access:[{name:'Legacy Console',visibility:'internal-only',username:'legacy-admin',secret:'••••••••••••',url:'https://legacy.example.test/admin',description:'Internal legacy maintenance access',namespace:'legacy'}],contents:[{id:'621301',content:'Legacy hosting add-on',quantity:'1 Package',activation:'2021-04-01',nextInvoice:'2026-04-01',netPrice:'420.00 EUR',info:'',cancellation:'2026-03-31'},{id:'621302',content:'Migration support',quantity:'10 H',activation:'2026-01-01',nextInvoice:'2026-04-01',netPrice:'900.00 EUR',info:'',cancellation:'—'}]}
+];
+const invoices=[
+{id:'INV-2026-00091',period:'January 2026',date:'2026-02-01',due:'2026-02-14',amount:'12,450.00 EUR',status:'PAID',type:'INVOICE',contract:'CON-10048',file:'invoice-2026-00091.pdf',source:'Billing system'},
+{id:'INV-2026-00121',period:'February 2026',date:'2026-03-01',due:'2026-03-14',amount:'12,820.00 EUR',status:'OPEN',type:'INVOICE',contract:'CON-10048',file:'invoice-2026-00121.pdf',source:'Billing system'},
+{id:'INV-2026-00148',period:'March 2026',date:'2026-04-01',due:'2026-04-14',amount:'13,030.00 EUR',status:'OVERDUE',type:'INVOICE',contract:'CON-10049',file:'invoice-2026-00148.pdf',source:'Billing system'},
+{id:'CRN-2026-00007',period:'March 2026',date:'2026-04-07',due:'—',amount:'-820.00 EUR',status:'PAID',type:'CORRECTION',contract:'CON-10048',file:'correction-2026-00007.pdf',source:'Billing system'}
+];
+function go(route){
+ document.querySelectorAll('.route').forEach(section=>section.classList.toggle('active',section.id==='route-'+route));
+ document.querySelectorAll('#nav .nav-sub a').forEach(a=>a.classList.toggle('active',a.getAttribute('data-route')===route));
+ document.querySelector('#nav .nav-main')?.classList.toggle('active',route==='start');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function customerLabel(id){return DEMO_CUSTOMERS[id]||`${id} · Example customer`;}
+function loadFeature(event,feature){
+ event.preventDefault();
+ const route=document.querySelector(`#route-${feature}`);
+ const input=event.target.querySelector('input[name="customerId"]');
+ const id=(input.value||'CUST-10482').trim()||'CUST-10482';
+ route.dataset.customerId=id;
+ route.querySelector('.feature-search').classList.add('hidden');
+ route.querySelector('.feature-loaded').classList.remove('hidden');
+ route.querySelectorAll('[data-customer-label]').forEach(el=>el.textContent=customerLabel(id));
+ route.querySelectorAll('[data-current-id]').forEach(el=>el.textContent=id);
+ if(feature==='tickets') renderTickets();
+ if(feature==='offers') renderOffers();
+ if(feature==='orders') renderOrders();
+ if(feature==='contracts') renderContracts();
+ if(feature==='invoices') renderInvoices();
+ toast(`${customerLabel(id)} loaded`);
+}
+function resetFeature(feature){
+ const route=document.querySelector(`#route-${feature}`);
+ route.querySelector('.feature-loaded').classList.add('hidden');
+ route.querySelector('.feature-search').classList.remove('hidden');
+}
+document.querySelectorAll('.tabs').forEach(tabset=>{
+ tabset.addEventListener('click',e=>{
+  const tab=e.target.closest('.tab'); if(!tab) return;
+  const group=tabset.dataset.tabs; const key=tab.dataset.tab;
+  tabset.querySelectorAll('.tab').forEach(item=>item.classList.toggle('active',item===tab));
+  document.querySelectorAll(`[data-pane^="${group}-"]`).forEach(pane=>pane.classList.toggle('show',pane.dataset.pane===`${group}-${key}`));
+ });
+});
+
+function enhanceTabsWithArrows(){
+ document.querySelectorAll('.tabs').forEach(tabset=>{
+  if(tabset.closest('.tabs-shell')) return;
+  const shell=document.createElement('div');
+  shell.className='tabs-shell';
+  const left=document.createElement('button');
+  left.type='button'; left.className='tab-arrow tab-arrow-left'; left.setAttribute('aria-label','Scroll tabs left'); left.innerHTML='‹';
+  const right=document.createElement('button');
+  right.type='button'; right.className='tab-arrow tab-arrow-right'; right.setAttribute('aria-label','Scroll tabs right'); right.innerHTML='›';
+  tabset.parentNode.insertBefore(shell,tabset);
+  shell.appendChild(left); shell.appendChild(tabset); shell.appendChild(right);
+  const update=()=>{
+   const canLeft=tabset.scrollLeft>4;
+   const canRight=(tabset.scrollLeft+tabset.clientWidth)<(tabset.scrollWidth-4);
+   left.classList.toggle('disabled',!canLeft);
+   right.classList.toggle('disabled',!canRight);
+  };
+  left.addEventListener('click',()=>{tabset.scrollBy({left:-180,behavior:'smooth'}); setTimeout(update,220);});
+  right.addEventListener('click',()=>{tabset.scrollBy({left:180,behavior:'smooth'}); setTimeout(update,220);});
+  tabset.addEventListener('scroll',update,{passive:true});
+  window.addEventListener('resize',update);
+  setTimeout(update,0);
+ });
+}
+enhanceTabsWithArrows();
+function statusClass(value){
+ const v=String(value).toUpperCase();
+ if(['ACTIVE','WON','COMPLETED','APPROVED','PAID','YES','ON TRACK'].includes(v)) return 'ok';
+ if(['OPEN','DRAFT'].includes(v)) return 'open';
+ if(['PENDING','IN PROGRESS','WAITING FOR CUSTOMER','ENDING','HIGH','MEDIUM','LOW'].includes(v)) return 'wait';
+ if(['OVERDUE','REJECTED','FAILED','LOST'].includes(v)) return 'danger';
+ if(['CANCELLED','CANCELED','CLOSED','CLOSED WON','CLOSED LOST'].includes(v)) return 'neutral';
+ return 'neutral';
+}
+function statusLabel(value){
+ const map={ACTIVE:'Active',WON:'Won',OPEN:'Open',DRAFT:'Draft',PENDING:'Pending',COMPLETED:'Completed',APPROVED:'Approved',PAID:'Paid',OVERDUE:'Overdue',ENDING:'Ending',INACTIVE:'Inactive',CORRECTION:'Correction',INVOICE:'Invoice','IN PROGRESS':'In Progress','WAITING FOR CUSTOMER':'Waiting for Customer',HIGH:'High',MEDIUM:'Medium',LOW:'Low'};
+ const v=String(value);
+ const upper=v.toUpperCase();
+ if(map[upper]) return map[upper];
+ return v.replace(/_/g,' ').toLowerCase().replace(/\b\w/g,c=>c.toUpperCase());
+}
+
+function renderTickets(){
+ const q=(document.getElementById('ticketSearch')?.value||'').toLowerCase();
+ const rows=document.getElementById('ticketRows'); if(!rows) return;
+ const filtered=tickets.filter(t=>(t.id+' '+t.subject+' '+t.requester).toLowerCase().includes(q));
+ rows.innerHTML=filtered.map(t=>`<tr><td class="mono">${t.id}</td><td>${t.subject}<div class="sub">${t.requester}</div></td><td><span class="status ${statusClass(t.status)}">${statusLabel(t.status)}</span></td><td>${statusLabel(t.priority)}</td><td>${t.type}</td><td>${t.assignee}</td><td>${t.updated}</td><td><button class="btn neutral small" onclick="showTicket('${t.id}')">Open preview</button></td></tr>`).join('')||'<tr><td colspan="8">No tickets.</td></tr>';
+}
+function showTicket(id){
+ const t=tickets.find(item=>item.id===id); if(!t) return;
+ document.getElementById('ticketPreview').innerHTML=`<div style="display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap"><div><h2 style="margin:0 0 6px;font-size:18px">${t.subject}</h2><span class="pill neutral mono">${t.id}</span> <span class="status ${statusClass(t.status)}">${statusLabel(t.status)}</span> <span class="status ${statusClass(t.priority)}">${statusLabel(t.priority)}</span></div><div class="sub">${t.updated}</div></div><div class="divider"></div><div class="label">Description</div><p class="sub" style="font-size:14px;color:var(--ink)">${t.description}</p><div style="display:flex;gap:10px;flex-wrap:wrap"><span class="pill neutral">Issue Tracker: ${t.issueKey}</span><span class="pill neutral">Ticket System: ${t.systemId}</span></div>`;
+}
+function openMockTab(title,subtitle,bodyHTML){
+ const w=window.open('', '_blank'); if(!w){toast('Popup blocked. External ticket system interface would open.');return;}
+ w.document.write(`<!doctype html><html><head><title>${title}</title><style>body{font-family:system-ui;margin:0;background:#f8fafc;color:#0f172a}header{padding:18px 22px;border-bottom:1px solid #e2e8f0;background:#fff;font-weight:800}.wrap{padding:22px}.panel{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:18px;max-width:900px}.hint{margin-top:12px;color:#64748b;font-size:13px}input,textarea{width:100%;border:1px solid #cbd5e1;border-radius:12px;padding:10px;font:inherit}textarea{min-height:160px}.badge{display:inline-flex;padding:5px 9px;border:1px solid #bfdbfe;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:800}</style></head><body><header>Ticket system interface <span class="sub">· ${subtitle}</span></header><div class="wrap"><div class="panel"><span class="badge">External system simulation</span>${bodyHTML}</div><div class="hint">This local mock represents the interface of the corresponding ticket system.</div></div></body></html>`); w.document.close();
+}
+document.addEventListener('click',e=>{
+ const cat=e.target.closest('.sidebtn[data-cat]');
+ if(cat){const name=cat.dataset.cat;openMockTab('Create Issue',name,`<h2>Create Issue · ${name}</h2><div class="content"><label>Summary</label><input value="[${name}] "><label style="display:block;margin-top:10px">Description</label><textarea></textarea></div>`);}
+ const filter=e.target.closest('.qf button');
+ if(filter){filter.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));filter.classList.add('active'); const f=filter.parentElement.dataset.filter; if(f==='offer')renderOffers(); if(f==='order')renderOrders(); if(f==='contract')renderContracts(); if(f==='invoice-status'||f==='invoice-type')renderInvoices();}
+});
+function openIssueSearch(){openMockTab('Search Issues','Issue Navigator','<h2>Issue Navigator</h2><div class="content"><p>This view represents the corresponding ticket system interface for issue search and preview.</p><div><strong>Query:</strong> customer = selected Customer ID ORDER BY updated DESC</div><div style="border:1px dashed #cbd5e1;border-radius:10px;padding:16px;margin-top:10px"><em>Search results would appear here.</em></div></div>');}
+function getActiveFilter(name){return document.querySelector(`.qf[data-filter="${name}"] button.active`)?.dataset.value||'ALL';}
+function renderOffers(){
+ const q=(document.getElementById('offerSearch')?.value||'').toLowerCase(); const status=getActiveFilter('offer'); const rows=document.getElementById('offerRows'); if(!rows)return;
+ const filtered=offers.filter(o=>(status==='ALL'||o.status===status)&&(o.id+' '+o.title+' '+o.source).toLowerCase().includes(q));
+ rows.innerHTML=filtered.map(o=>`<tr><td><span class="status ${statusClass(o.status)}">${statusLabel(o.status)}</span></td><td class="mono">${o.id}</td><td>${o.title}</td><td>${o.date}</td><td>${o.value}</td><td>${o.source}</td><td>${o.imported}</td></tr>`).join('')||'<tr><td colspan="7">No offers.</td></tr>';
+}
+function renderOrders(){
+ const q=(document.getElementById('orderSearch')?.value||'').toLowerCase(); const status=getActiveFilter('order'); const rows=document.getElementById('orderRows'); if(!rows)return;
+ const filtered=orders.filter(o=>(status==='ALL'||o.status===status)&&(o.id+' '+o.product+' '+o.project).toLowerCase().includes(q));
+ rows.innerHTML=filtered.map(o=>`<tr><td><span class="status ${statusClass(o.status)}">${statusLabel(o.status)}</span></td><td>${o.type}</td><td>${o.project}</td><td class="mono">${o.id}</td><td>${o.product}</td><td>${o.date}</td><td>${o.initiator}</td><td>${o.fulfillment}</td><td><div class="action-icons"><button class="icon-action" type="button" title="Open provisioning details" aria-label="Open provisioning details" onclick="toast('Open provisioning details (prototype)')"><svg class="icon"><use href="#icon-external-link"></use></svg></button><button class="icon-action" type="button" title="Open customer portal" aria-label="Open customer portal" onclick="toast('Open customer portal order context (prototype)')"><svg class="icon"><use href="#icon-cloud-user"></use></svg></button></div></td></tr>`).join('')||'<tr><td colspan="9">No orders.</td></tr>';
+}
+function renderContracts(){
+ const q=(document.getElementById('contractSearch')?.value||'').toLowerCase(); const status=getActiveFilter('contract'); const rows=document.getElementById('contractRows'); if(!rows)return;
+ const filtered=contracts.filter(c=>(status==='ALL'||c.status===status)&&(c.id+' '+c.product+' '+c.source).toLowerCase().includes(q));
+ rows.innerHTML=filtered.map(c=>`<tr class="row-clickable" tabindex="0" role="button" aria-label="Open contract ${c.id}" onclick="openContractDetail('${c.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openContractDetail('${c.id}')}"><td><span class="status ${statusClass(c.status)}">${statusLabel(c.status)}</span></td><td class="mono">${c.id}</td><td>${c.product}</td><td>${c.start}</td><td>${c.end}</td><td>${c.cycle}</td></tr>`).join('')||'<tr><td colspan="6">No contracts.</td></tr>';
+}
+function visibilityLabel(value){
+ return String(value).toLowerCase()==='internal-only'?'Internal-only':'Customer-visible';
+}
+function visibilityClass(value){
+ return String(value).toLowerCase()==='internal-only'?'internal':'';
+}
+function openContractDetail(id){
+ const c=contracts.find(item=>item.id===id); const target=document.getElementById('contractDetailPage'); if(!c||!target)return;
+ const contentRows=(c.contents||[]).map(item=>`<tr><td class="mono">${item.id}</td><td><div class="contents-name">${item.content}</div></td><td>${item.quantity}</td><td>${item.activation}</td><td>${item.nextInvoice}</td><td>${item.netPrice}</td><td>${item.info||'—'}</td><td>${item.cancellation||'—'}</td></tr>`).join('');
+ const accessCards=(c.access||[]).map(a=>`<article class="credential-card ${visibilityClass(a.visibility)}"><div class="credential-card-header"><div class="credential-title">${a.name}</div><span class="visibility-badge">${visibilityLabel(a.visibility)}</span></div><div class="credential-row"><span class="label-inline">Username</span><div class="credential-value"><span class="mono">${a.username}</span><button class="inline-icon-btn" type="button" title="Copy username" aria-label="Copy username" onclick="toast('Username copied (prototype)')"><svg class="icon icon-sm"><use href="#icon-copy"></use></svg></button></div></div><div class="credential-row"><span class="label-inline">Password</span><div class="credential-value"><span class="secret-chip"><span class="secret-dots">${a.secret}</span><button class="inline-icon-btn" type="button" title="Copy password" aria-label="Copy password" onclick="toast('Password copied (prototype)')"><svg class="icon icon-sm"><use href="#icon-copy"></use></svg></button><button class="inline-icon-btn" type="button" title="Show password" aria-label="Show password" onclick="toast('Password reveal is disabled in read-only prototype')"><svg class="icon icon-sm"><use href="#icon-eye"></use></svg></button></span></div></div><div class="credential-row"><span class="label-inline">URL</span><div class="credential-value"><a href="#" onclick="toast('Open URL in new tab (prototype)');return false;">${a.url}</a><button class="inline-icon-btn" type="button" title="Copy URL" aria-label="Copy URL" onclick="toast('URL copied (prototype)')"><svg class="icon icon-sm"><use href="#icon-copy"></use></svg></button></div></div><div class="credential-row"><span class="label-inline">Description</span><div>${a.description}</div></div>${a.namespace?`<div class="credential-row"><span class="label-inline">Namespace</span><div>${a.namespace}</div></div>`:''}</article>`).join('');
+ target.innerHTML=`<div class="detail-page-header"><div><div class="sub">Customer Management › Contracts › ${c.id}</div><div class="detail-page-title"><h1>Contract ${c.id}</h1><span class="status ${statusClass(c.status)}">${statusLabel(c.status)}</span></div></div><div class="detail-toolbar"><button class="btn neutral small" onclick="go('contracts')">Back to Contracts</button></div></div><section class="card"><div class="cardhead"><h2>Contract Details</h2><span class="pill neutral">read-only</span></div><div class="cardbody"><div class="detail-grid"><div class="detail-card"><h3>Contract Information</h3><div class="detail-list"><div class="detail-row"><span>Product</span><strong>${c.product}</strong></div><div class="detail-row"><span>Source</span><div>${c.source}</div></div><div class="detail-row"><span>Billing</span><div>${c.cycle}</div></div></div></div><div class="detail-card"><h3>Key Dates</h3><div class="detail-list"><div class="detail-row"><span>Start date</span><div>${c.start}</div></div><div class="detail-row"><span>End / renewal</span><div>${c.end}</div></div><div class="detail-row"><span>Status</span><div><span class="status ${statusClass(c.status)}">${statusLabel(c.status)}</span></div></div></div></div><div class="detail-card"><h3>Internal Context</h3><div class="detail-list"><div class="detail-row"><span>Area</span><div>${c.area}</div></div><div class="detail-row"><span>Owner</span><div>${c.owner}</div></div><div class="detail-row"><span>Customer</span><div>${c.customer}</div></div></div></div></div></div></section><section class="card"><div class="cardhead"><h2>Contents</h2><span class="sub">Contract line items / product contents</span></div><div class="cardbody"><div class="contents-table-wrap"><table class="contents-table"><thead><tr><th>ID</th><th>Content</th><th>Quantity</th><th>Activation Date</th><th>Next Invoice Date</th><th>Net Price</th><th>Info</th><th>Cancellation Date</th></tr></thead><tbody>${contentRows}</tbody></table></div></div></section><section class="card"><div class="cardhead"><h2><svg class="icon icon-sm" aria-hidden="true"><use href="#icon-server"></use></svg> Access Data</h2><span class="pill neutral">read-only cards</span></div><div class="cardbody"><div class="credentials-toolbar"><div class="sub">Access data is displayed as read-only contract context. Visibility indicates whether credentials are customer-visible or internal-only.</div><div class="visibility-filters" aria-label="Visibility filter"><span class="active">All</span><span>Customer-visible</span><span>Internal-only</span></div></div><div class="credential-grid">${accessCards}</div><div class="readonly-note">This prototype keeps credentials embedded in the contract context. Customer-level credential editing and dedicated credential governance are intentionally out of scope for this unbranded stage.</div></div></section>`;
+ go('contract-detail');
+}
+
+function renderInvoices(){
+ const q=(document.getElementById('invoiceSearch')?.value||'').toLowerCase(); const rows=document.getElementById('invoiceRows'); if(!rows)return;
+ const status=getActiveFilter('invoice-status'); const type=getActiveFilter('invoice-type');
+ const filtered=invoices.filter(i=>(status==='ALL'||i.status===status)&&(type==='ALL'||i.type===type)&&(i.id+' '+i.period+' '+i.status+' '+i.type+' '+i.contract).toLowerCase().includes(q));
+ rows.innerHTML=filtered.map(i=>`<tr class="row-clickable" tabindex="0" role="button" aria-label="Open invoice ${i.id}" onclick="openInvoiceDetail('${i.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openInvoiceDetail('${i.id}')}"><td><span class="status ${statusClass(i.status)}">${statusLabel(i.status)}</span></td><td class="mono">${i.id}</td><td>${i.period}</td><td>${i.date}</td><td>${i.due}</td><td>${statusLabel(i.type)}</td><td>${i.amount}</td><td class="file-actions"><button class="icon-action" title="Open PDF" aria-label="Open PDF" onclick="event.stopPropagation();toast('Open PDF in new tab (prototype)')"><svg class="icon"><use href="#icon-pdf"></use></svg></button><button class="icon-action" title="Download PDF" aria-label="Download PDF" onclick="event.stopPropagation();toast('Download PDF (prototype)')"><svg class="icon"><use href="#icon-download"></use></svg></button></td></tr>`).join('')||'<tr><td colspan="8">No invoices.</td></tr>';
+ renderAttachments(filtered);
+}
+function openInvoiceDetail(id){
+ const i=invoices.find(item=>item.id===id); const target=document.getElementById('invoiceDetailPage'); if(!i||!target)return;
+ target.innerHTML=`<div class="detail-page-header"><div><div class="sub">Customer Management › Invoices › ${i.id}</div><div class="detail-page-title"><h1>Invoice ${i.id}</h1><span class="status ${statusClass(i.status)}">${statusLabel(i.status)}</span></div></div><div class="detail-toolbar"><button class="btn neutral small" onclick="go('invoices')">Back to Invoices</button></div></div><section class="card"><div class="cardhead"><h2>Invoice Details</h2><div class="file-action-group"><button class="icon-action" title="Open PDF" aria-label="Open PDF" onclick="toast('Open PDF in new tab (prototype)')"><svg class="icon"><use href="#icon-pdf"></use></svg></button><button class="icon-action" title="Download PDF" aria-label="Download PDF" onclick="toast('Download PDF (prototype)')"><svg class="icon"><use href="#icon-download"></use></svg></button></div></div><div class="cardbody"><div class="detail-grid"><div class="detail-card"><h3>Invoice Information</h3><div class="detail-list"><div class="detail-row"><span>Invoice number</span><div class="mono">${i.id}</div></div><div class="detail-row"><span>Period</span><div>${i.period}</div></div><div class="detail-row"><span>Type</span><div>${statusLabel(i.type)}</div></div><div class="detail-row"><span>Date</span><div>${i.date}</div></div></div></div><div class="detail-card"><h3>Amount Details</h3><div class="detail-list"><div class="detail-row"><span>Amount</span><strong>${i.amount}</strong></div><div class="detail-row"><span>Due date</span><div>${i.due}</div></div><div class="detail-row"><span>Payment</span><div><span class="status ${statusClass(i.status)}">${statusLabel(i.status)}</span></div></div></div></div><div class="detail-card"><h3>Related Contract</h3><div class="detail-list"><div class="detail-row"><span>Contract</span><div class="mono">${i.contract}</div></div><div class="detail-row"><span>Source</span><div>${i.source}</div></div><div class="detail-row"><span>File</span><div>${i.file}</div></div></div></div></div><div class="adjacent-area-note"><strong>Planned extension:</strong> XML download can be added later for structured invoice processing.</div></div></section>`;
+ go('invoice-detail');
+}
+function renderAttachments(list=invoices){
+ const rows=document.getElementById('attachmentRows'); if(!rows)return;
+ rows.innerHTML=list.map(i=>`<tr><td>${i.file}</td><td class="mono">${i.id}</td><td>${statusLabel(i.type)}</td><td>${i.date}</td><td class="file-actions"><button class="icon-action" title="Open PDF" aria-label="Open PDF" onclick="toast('Open PDF in new tab (prototype)')"><svg class="icon"><use href="#icon-pdf"></use></svg></button><button class="icon-action" title="Download PDF" aria-label="Download PDF" onclick="toast('Download PDF (prototype)')"><svg class="icon"><use href="#icon-download"></use></svg></button></td></tr>`).join('')||'<tr><td colspan="5">No attachments.</td></tr>';
+}
+let slaStarted=false;
+function startSLA(){if(slaStarted)return; slaStarted=true; const start=Date.now(); const fr=30*60*1000; const res=4*60*60*1000; function fmt(ms){const s=Math.max(0,Math.floor(ms/1000)); return `${String(Math.floor(s/3600)).padStart(2,'0')}:${String(Math.floor((s%3600)/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;} setInterval(()=>{const elapsed=Date.now()-start; const frEl=document.getElementById('slaFR'); const resEl=document.getElementById('slaRes'); if(frEl)frEl.textContent=fmt(fr-elapsed); if(resEl)resEl.textContent=fmt(res-elapsed);},1000);}
+const routeObserver=new MutationObserver(()=>{if(document.getElementById('route-tickets').classList.contains('active'))startSLA();});
+routeObserver.observe(document.getElementById('route-tickets'),{attributes:true,attributeFilter:['class']});
+let toastTimer;function toast(msg){const el=document.getElementById('toast');document.getElementById('toastText').textContent=msg;el.style.display='flex';clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.style.display='none',1800);} 
+
+function initTheme(){
+ const root=document.documentElement;
+ const btn=document.getElementById('themeToggle');
+ const label=document.getElementById('themeLabel');
+ let saved='light';
+ try{saved=localStorage.getItem('oh_cm_theme')||'light';}catch(e){}
+ function applyTheme(mode){
+  root.setAttribute('data-theme',mode);
+  if(label) label.textContent=mode==='dark'?'Dark':'Light';
+  if(btn) btn.setAttribute('aria-pressed',mode==='dark'?'true':'false');
+  try{localStorage.setItem('oh_cm_theme',mode);}catch(e){}
+ }
+ applyTheme(saved==='dark'?'dark':'light');
+ if(btn){
+  btn.addEventListener('click',()=>{
+   const next=root.getAttribute('data-theme')==='dark'?'light':'dark';
+   applyTheme(next);
+  });
+ }
+}
+initTheme();
+
+renderOffers();renderOrders();renderContracts();renderInvoices();renderTickets();
+</script>
+</body>
+</html>
