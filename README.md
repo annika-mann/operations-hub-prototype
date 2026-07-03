@@ -1,33 +1,71 @@
 # Operations Hub Prototype
 
-The Operations Hub Prototype explores internal tooling concepts for customer operations, support workflows and administrative customer management in complex B2B SaaS environments.
+This repository contains product-oriented mockups for an internal operations hub, focusing on customer management, operational workflows, connected system handoffs, and internal tooling.
 
-This repository is part of a product management portfolio. It contains anonymized, interactive HTML prototypes that demonstrate product structure, user flows, operational context and decision-making around internal B2B SaaS tooling.
+## Portfolio Context
+
+This repository is part of a product management portfolio.
+
+It documents how internal platform tooling can evolve from fragmented operational needs into structured, role-aware and system-oriented interfaces.
+
+The focus is not visual design alone, but product thinking:
+
+- understanding internal user, operational and business needs
+- structuring complex internal workflows
+- translating system dependencies into usable interfaces
+- preparing internal tools for implementation, handover and future iteration
+
+## Structure
+
+The mockups are organized into three stages:
+
+- **Unbranded**  
+  Focus on product logic, structure, information architecture and workflow clarity without visual design constraints.
+
+- **MVP Reconstruction**  
+  Reconstruction of realistic internal platform patterns, connected systems and operational workflows based on an existing MVP context.
+
+- **Product Vision**  
+  Exploration of future enhancements, personalization, governance, lifecycle operations and cross-area improvements.
 
 ## Current Features
 
-| Area / Feature | Status | Description | Unbranded | Design System | Product Vision |
+| Feature | Status | Description | Unbranded | MVP Reconstruction | Product Vision |
 |---|---|---|---|---|---|
-| Customer Management | Available | Internal customer context area for read-only customer information, contacts, user assignments, tickets and commercial context in an Operations Hub environment. | [Open](features/customer-management/customer-management-unbranded.html) | — | — |
+| Customer Management | Available | Internal customer workspace with customer profile, contacts, users, tickets, offers, orders, contracts, invoices and connected system handoffs. | [Open](features/customer-management/customer-management-unbranded.html) | — | — |
+| Customer Operations | In progress | Operational customer lifecycle workflows such as invitations, deactivation, account recovery, access handling and cleanup processes. | Planned | — | — |
+| Credentials & Security | Planned | Credential visibility, sensitive access handling, customer-level credentials, auditability and future governance workflows. | — | — | — |
+| Reporting | Planned | Internal reporting for operational transparency, order monitoring, fraud/compliance context and process follow-up. | — | — | — |
 
 ## Goals, Signals & Metrics
 
-The prototypes are not only visual mock-ups. Each area is framed around a product goal, observable success signals and potential metrics that could be used to evaluate whether the solution creates value for internal users, customers and the platform.
+The mockups are not only visual prototypes. Each area is framed around a product goal, observable success signals and potential metrics that could be used to evaluate whether the internal tool creates value for teams, customers and the platform.
 
-| Area / Feature | Goal | Signals | Potential Metrics |
+| Area | Goal | Signals | Potential Metrics |
 |---|---|---|---|
-| Customer Management | Enable internal teams to access relevant customer context in one structured Operations Hub area instead of relying on scattered legacy tools or manual lookups. | Internal users can find customer master data, contacts, user assignments, tickets, orders, contracts and invoices from a shared customer context. Ticket creation is available as an intentional operational exception. | Time to find customer information, reduction of tool switching, reduction of duplicate customer lookups, support handling time, ticket creation accuracy, internal user adoption. |
+| Customer Management | Enable internal teams to understand customer context and navigate related operational data from one structured workspace. | Internal users can find customer data, understand related contracts, orders and invoices, identify contacts and move into connected systems without fragmented lookups. | Time to find customer context, reduction of system switching, support handling time, completeness of customer context, usage of linked system handoffs. |
+| Customer Operations | Support recurring customer lifecycle operations through guided, auditable workflows. | Teams can process invitations, deactivations, recovery tasks and access changes consistently without relying on manual workarounds. | Workflow completion time, number of manual escalations, error rate, audit completeness, repeat support requests. |
+| Credentials & Security | Improve transparency and control around sensitive access data while keeping responsibilities, visibility and auditability clear. | Internal users can distinguish customer-visible and internal-only credentials, understand permission boundaries and perform sensitive actions only when authorized. | Sensitive access views, credential handling errors, audit log completeness, time to resolve credential-related requests. |
+| Reporting | Provide operational visibility for internal teams and reduce manual report creation. | Users can access relevant reports, understand report scope and export data for follow-up without requesting ad-hoc system extracts. | Report usage, manual report requests, export frequency, time to prepare operational follow-up. |
 
 ## Development Approach
 
-The prototypes follow a staged portfolio approach:
+Each feature is documented across multiple stages:
 
-- **Unbranded:** neutral SaaS prototype focused on structure, scope and handover logic.
-- **Design System:** refined version using a stronger visual system and improved interaction patterns.
-- **Product Vision:** strategic evolution showing how the area could develop beyond the initial MVP.
+1. **Unbranded Prototype**
+   - Focus on product logic, workflows and information architecture.
+   - Shows what the system needs to do without relying on brand-specific UI decisions.
 
-This repository starts with the unbranded Customer Management prototype as a reconstructed handover and MVP scoping artifact.
+2. **MVP Reconstruction**
+   - Reconstructs realistic MVP behavior, internal system connections and implementation-driven constraints.
+   - Makes operational trade-offs, system handoffs and internal workflows visible.
+
+3. **Product Vision**
+   - Explores future enhancements and longer-term product evolution.
+   - May include personalization, lifecycle workflows, governance, auditability and cross-area improvements.
+
+Further features and iterations will be added over time.
 
 ## Notes
 
-All prototype data is anonymized and fictional. The prototypes are portfolio artifacts and do not contain production data, proprietary customer information or real internal system access.
+All data is anonymized and fictional. The prototypes are portfolio artifacts and do not contain production data, proprietary customer information or real internal system access.
