@@ -1,6 +1,6 @@
-# Operations Hub Prototype
+# Operations Hub Product Prototype
 
-This repository contains product-oriented mockups for an internal operations hub, focusing on customer management, operational workflows, connected system handoffs, and internal tooling.
+This repository contains staged product prototypes for an internal operations hub, focusing on customer management, operational workflows, connected system handoffs, and internal tooling.
 
 ## Portfolio Context
 
@@ -32,8 +32,8 @@ The mockups are organized into three stages:
 
 | Feature | Status | Description | Unbranded | MVP Reconstruction | Product Vision |
 |---|---|---|---|---|---|
-| Customer Management | Available | Internal customer workspace with customer profile, contacts, users, tickets, offers, orders, contracts, invoices and connected system handoffs. | [Open](features/customer-management/customer-management-unbranded.html) | — | — |
-| Customer Operations | In progress | Operational customer lifecycle workflows such as invitations, deactivation, account recovery, access handling and cleanup processes. | Planned | — | — |
+| Customer Management | Available | Internal customer workspace with customer profile, contacts, users, tickets, offers, orders, contracts, invoices and connected-system handoffs.<br><br>[Read Case Study](features/customer-management/customer-management-case-study.md) | [Open](features/customer-management/customer-management-unbranded.html) | [Open](features/customer-management/customer-management-mvp-reconstruction.html) | — |
+| Customer Operations | In Progress | Operational customer lifecycle workflows such as invitations, deactivation, account recovery, access handling and cleanup processes. | In Preperation | — | — |
 | Credentials & Security | Planned | Credential visibility, sensitive access handling, customer-level credentials, auditability and future governance workflows. | — | — | — |
 | Reporting | Planned | Internal reporting for operational transparency, order monitoring, fraud/compliance context and process follow-up. | — | — | — |
 
