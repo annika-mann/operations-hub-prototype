@@ -32,8 +32,8 @@ The current prototypes cover both the first unbranded product-logic stage and a 
 
 | Prototype | Status | Link |
 |---|---|---|
-| Customer Management – Unbranded Prototype | Available | [Open prototype](features/customer-management/customer-management-unbranded.html) |
-| Customer Management – MVP Reconstruction | Available | [Open prototype](features/customer-management/customer-management-mvp-reconstruction.html) |
+| Customer Management – Unbranded Prototype | Available | [Open prototype](./customer-management-unbranded.html) |
+| Customer Management – MVP Reconstruction | Available | [Open prototype](./customer-management-mvp-reconstruction.html) |
 | Product Vision | Planned | Coming soon |
 
 ## Problem
